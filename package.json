@@ -1,0 +1,38 @@
+{
+  "name": "atariki-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.10",
+    "autoprefixer": "^10.4.20",
+    "dotenv": "^16.4.5",
+    "express-rate-limit": "^7.4.0",
+    "form-data": "^4.0.0",
+    "framer-motion": "^11.9.0",
+    "mailgun.js": "^10.2.3",
+    "next": "^14.2.13",
+    "nodemailer": "^6.9.15",
+    "postcss": "^8.4.47",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "react-tooltip": "^4.5.1",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.16",
+    "@types/react-icons": "^3.0.0",
+    "@types/react-tooltip": "^4.2.4"
+  }
+}
