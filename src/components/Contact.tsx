@@ -36,21 +36,27 @@ const ContactForm: React.FC = () => {
 
   return (
     <div className="relative mt-8">
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-300">Nombre:</label>
-          <input type="text" id="name" name="name" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" required />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-300">Correo Electrónico:</label>
-          <input type="email" id="email" name="email" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" required />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="message" className="block text-gray-300">Mensaje:</label>
-          <textarea id="message" name="message" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" rows={5} required></textarea>
-        </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Enviar</button>
-      </form>
+      <div className="max-w-lg mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold text-gray-100 mb-4">Contáctame</h2>
+        <p className="text-gray-300 mb-6">
+          Si tienes alguna consulta técnica, necesitas hablar sobre un proyecto o cotizaciones, no dudes en contactarme a través del siguiente formulario.
+        </p>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-300">Nombre:</label>
+            <input type="text" id="name" name="name" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-300">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" required />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="message" className="block text-gray-300">Mensaje:</label>
+            <textarea id="message" name="message" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" rows={5} required></textarea>
+          </div>
+          <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Enviar</button>
+        </form>
+      </div>
 
       {status && (
         <div className={`fixed inset-0 flex items-center justify-center transition-opacity duration-300 ${status ? 'opacity-100' : 'opacity-0'}`}>
