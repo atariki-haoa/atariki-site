@@ -31,10 +31,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     await mg.messages.create(process.env.MAILGUN_DOMAIN as string, data);
-    res.status(200).json({ success: true, message: 'Correo enviado correctamente.' });
+    res.status(200).send({ success: true, message: 'Correo enviado correctamente.' });
   } catch (error) {
     console.error('Error enviando el correo:', error);
-    res.status(500).json({ error: 'Error al enviar el correo. Inténtalo de nuevo más tarde.' });
+    res.status(500).send({ error: 'Error al enviar el correo. Inténtalo de nuevo más tarde.' });
   }
 }
 

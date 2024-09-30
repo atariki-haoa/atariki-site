@@ -21,42 +21,50 @@ const Projects: React.FC = () => {
             <div className="p-6 bg-gray-700 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">
                 <FaCode className="inline-block w-6 h-6 mr-2" />
-                Proyecto 1
+                Sitio Personal de Ariel Lobos
               </h3>
               <p className="mb-4">
-                Descripción del proyecto 1. Este proyecto involucró el uso de tecnologías como Node.js, React y MongoDB para crear una aplicación web robusta y escalable.
+              Este es el repositorio del sitio personal de Ariel Lobos Haoa, desarrollado con Next.js. El sitio muestra mis habilidades, proyectos y pasiones.
               </p>
-              <FaStar className="text-yellow-500 mx-auto my-4 animate-bounce" />
+              <a href="https://github.com/atariki-haoa/atariki-site" target="_blank" rel="noopener noreferrer">
+                <FaStar className="text-yellow-500 mx-auto my-4 animate-bounce" />
+              </a>
             </div>
             <div className="p-6 bg-gray-700 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">
                 <FaServer className="inline-block w-6 h-6 mr-2" />
-                Proyecto 2
+                API REST para bares con MongoDB
               </h3>
               <p className="mb-4">
-                Descripción del proyecto 2. En este proyecto, trabajé en la implementación de un sistema de gestión de bases de datos utilizando SQL y optimización de consultas.
+              API RESTful desarrollada en Node.js y MongoDB para la gestión de un bar, proporcionando endpoints para manejar operaciones como la creación, actualización, eliminación y consulta de datos relacionados con el bar.
               </p>
-              <FaRocket className="text-red-500 mx-auto my-4 animate-bounce" />
+              <a href="https://github.com/atariki-haoa/ApiRestBar_MongoDB" target="_blank" rel="noopener noreferrer">
+                <FaRocket className="text-red-500 mx-auto my-4 animate-bounce" />
+              </a>
             </div>
             <div className="p-6 bg-gray-700 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">
                 <FaDatabase className="inline-block w-6 h-6 mr-2" />
-                Proyecto 3
+                Plantilla base en Next.js
               </h3>
               <p className="mb-4">
-                Descripción del proyecto 3. Este proyecto se centró en la creación de una API RESTful utilizando Node.js y Express, con autenticación y autorización de usuarios.
+               Proyecto para crear un sistema base para proyectos en Next.js utilizando TypeScript.
               </p>
-              <FaCogs className="text-green-500 mx-auto my-4 animate-bounce" />
+              <a href="https://github.com/atariki-haoa/next-base-system" target="_blank" rel="noopener noreferrer">
+                <FaCogs className="text-green-500 mx-auto my-4 animate-bounce" />
+              </a>
             </div>
             <div className="p-6 bg-gray-700 rounded-lg shadow-md">
               <h3 className="text-xl font-bold mb-2">
                 <FaLaptopCode className="inline-block w-6 h-6 mr-2" />
-                Proyecto 4
+                Chile en GeoJSON format
               </h3>
               <p className="mb-4">
-                Descripción del proyecto 4. Este proyecto involucró el desarrollo de una aplicación móvil utilizando React Native y Firebase.
+                Proyecto para exportar los datos de Chile a GeoJSON format.
               </p>
-              <FaRocket className="text-blue-500 mx-auto my-4 animate-bounce" />
+              <a href="https://github.com/atariki-haoa/geo" target="_blank" rel="noopener noreferrer">
+                <FaRocket className="text-blue-500 mx-auto my-4 animate-bounce" />
+              </a>
             </div>
           </div>
         </section>
