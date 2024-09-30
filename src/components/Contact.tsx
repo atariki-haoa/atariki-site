@@ -39,7 +39,7 @@ const ContactForm: React.FC = () => {
       <div className="max-w-lg mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-gray-100 mb-4">Contáctame</h2>
         <p className="text-gray-300 mb-6">
-          Si tienes alguna consulta técnica, necesitas hablar sobre un proyecto o cotizaciones, no dudes en contactarme a través del siguiente formulario.
+          Si tienes alguna consulta técnica, necesitas hablar sobre un proyecto o cotizaciones, no dudes en contactarme a través del siguiente formulario o a mi correo: <a href="mailto:ariel@atariki.com">ariel@atariki.com</a>
         </p>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
