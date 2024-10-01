@@ -3,6 +3,8 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import rateLimit from 'express-rate-limit';
 import { runMiddleware } from '../../utils/middleware';
+import csurf from 'csurf';
+import cookieParser from 'cookie-parser';
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({ 
@@ -15,7 +17,11 @@ const contactLimiter = rateLimit({
   message: 'Has alcanzado el límite de envíos de correos. Por favor, intenta más tarde.',
 });
 
+const csrfProtection = csurf({ cookie: true });
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await runMiddleware(req, res, cookieParser());
+  await runMiddleware(req, res, csrfProtection);
   await runMiddleware(req, res, contactLimiter);
 
   const { name, message } = req.body;

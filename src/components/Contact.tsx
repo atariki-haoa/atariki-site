@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ContactForm: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const response = await fetch('/api/csrf-token');
+      const data = await response.json();
+      setCsrfToken(data.csrfToken);
+    };
+    fetchCsrfToken();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -16,6 +26,7 @@ const ContactForm: React.FC = () => {
         body: JSON.stringify(Object.fromEntries(formData.entries())),
         headers: {
           'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken || '',
         },
       });
 
@@ -42,6 +53,7 @@ const ContactForm: React.FC = () => {
           Si tienes alguna consulta técnica, necesitas hablar sobre un proyecto o cotizaciones, no dudes en contactarme a través del siguiente formulario o a mi correo: <a href="mailto:ariel@atariki.com">ariel@atariki.com</a>
         </p>
         <form onSubmit={handleSubmit}>
+          <input type="hidden" name="_csrf" value={csrfToken || ''} />
           <div className="mb-4">
             <label htmlFor="name" className="block text-gray-300">Nombre:</label>
             <input type="text" id="name" name="name" className="w-full p-2 border border-gray-600 bg-gray-700 text-gray-300 rounded-md" required />
