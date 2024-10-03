@@ -3,7 +3,6 @@ import Layout from '../components/Layout';
 import { FaReact, FaNodeJs, FaJs, FaPython } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
 import SkillPopup from '../components/SkillPopup';
-import ChatBox from '../components/ChatBox';
 
 interface Skill {
   id: number;
