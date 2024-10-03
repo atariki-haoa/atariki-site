@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaGithub, FaLinkedin, FaHome, FaUser, FaProjectDiagram, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaHome, FaUser, FaProjectDiagram, FaEnvelope, FaComments } from 'react-icons/fa';
 import ReactTooltip from 'react-tooltip';
 
 const Header: React.FC = () => {
@@ -18,6 +18,9 @@ const Header: React.FC = () => {
         </Link>
         <Link href="/contact" className="menu-item" aria-label="Contacto" data-tip="Contacto">
           <FaEnvelope className="text-2xl" />
+        </Link>
+        <Link href="/chat" className="menu-item" aria-label="Chat" data-tip="Chat">
+          <FaComments className="text-2xl" />
         </Link>
         <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tip="GitHub">
           <FaGithub className="text-2xl" />

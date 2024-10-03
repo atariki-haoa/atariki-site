@@ -69,3 +69,5 @@ ehthumbs.db
 # Temporary files
 *.tmp
 *.temp
+*.sh
+ecosystem.*
