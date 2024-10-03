@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig'; // Importar la instancia configurada
 import { FaPaperPlane } from 'react-icons/fa';
 import ClipLoader from 'react-spinners/ClipLoader';
 import ReactMarkdown from 'react-markdown';
@@ -15,8 +15,12 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     const fetchCsrfToken = async () => {
-      const response = await axios.get('/api/csrf-token');
-      setCsrfToken(response.data.csrfToken);
+      try {
+        const response = await axios.get('/api/csrf-token');
+        setCsrfToken(response.data.csrfToken);
+      } catch (error) {
+        console.error('Error al obtener el token CSRF:', error);
+      }
     };
     fetchCsrfToken();
   }, []);
@@ -50,7 +54,7 @@ const Chat: React.FC = () => {
       let botMessage = { role: 'bot', content: '' };
 
       while (true) {
-        const { done, value } = await reader?.read()!;
+        const { done, value } = await reader?.read() || {};
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
 
