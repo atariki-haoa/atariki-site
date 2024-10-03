@@ -14,8 +14,13 @@ app.prepare().then(() => {
   server.use(cookieParser());
 
   // Configurar middleware CSRF
-  const csrfProtection = csurf({ cookie: true });
-  server.use(csrfProtection);
+  const csrfProtection = csurf({
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Asegúrate de que sea true en producción
+      sameSite: 'strict', // Ajusta según tus necesidades
+    },
+  });  server.use(csrfProtection);
 
   // Ruta para obtener el token CSRF
   server.get('/api/csrf-token', (req, res) => {
