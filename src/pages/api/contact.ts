@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import { runMiddleware } from '../../utils/middleware';
 // @ts-ignore
 import csurf from 'csurf';
+// @ts-ignore
 import cookieParser from 'cookie-parser';
 
 const mailgun = new Mailgun(formData);
