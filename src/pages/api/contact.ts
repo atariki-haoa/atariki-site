@@ -3,6 +3,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import rateLimit from 'express-rate-limit';
 import { runMiddleware } from '../../utils/middleware';
+// @ts-ignore
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 

@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+// @ts-ignore
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import { runMiddleware } from '../../utils/middleware';
