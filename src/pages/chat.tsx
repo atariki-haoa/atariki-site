@@ -7,13 +7,30 @@ import Layout from '../components/Layout';
 import styles from '../styles/ChatBox.module.css';
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<{ role: string, content: string }[]>([]);
+  const [messages, setMessages] = useState<{ role: string, content: string }[]>([
+    { role: 'system', content: 'Este es un chat de demostración. Puedes probarlo, pero no guarda ninguna información.' }
+  ]);
   const [newMessage, setNewMessage] = useState<string>('');
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [serviceAvailable, setServiceAvailable] = useState<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const checkServiceAvailability = async () => {
+      try {
+        const response = await axios.get('/api/health');
+        if (response.status === 200) {
+          setServiceAvailable(true);
+        } else {
+          setServiceAvailable(false);
+        }
+      } catch (error) {
+        console.error('Error al verificar la disponibilidad del servicio:', error);
+        setServiceAvailable(false);
+      }
+    };
+
     const fetchCsrfToken = async () => {
       try {
         const response = await axios.get('/api/csrf-token');
@@ -22,6 +39,8 @@ const Chat: React.FC = () => {
         console.error('Error al obtener el token CSRF:', error);
       }
     };
+
+    checkServiceAvailability();
     fetchCsrfToken();
   }, []);
 
@@ -114,13 +133,14 @@ const Chat: React.FC = () => {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Escribe tu mensaje..."
+                placeholder={serviceAvailable ? "Escribe tu mensaje..." : "Servicio no disponible en este momento"}
                 required
                 className={styles.chatboxInput}
                 rows={1}
                 style={{ backgroundColor: '#f0f0f0', color: 'black', fontSize: '14px' }}
+                disabled={!serviceAvailable}
               />
-              <button type="submit" className={styles.chatboxButton} disabled={loading}>
+              <button type="submit" className={styles.chatboxButton} disabled={loading || !serviceAvailable}>
                 <FaPaperPlane />
               </button>
             </form>
