@@ -3,6 +3,7 @@ import Layout from '../components/functional/Layout';
 import { FaReact, FaNodeJs, FaJs, FaPython, FaArrowDown, FaCode, FaRocket, FaDownload } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
 import SkillPopup from '../components/ui/SkillPopup';
+import { PersonStructuredData, WebsiteStructuredData } from '../components/ui/StructuredData';
 import Link from 'next/link';
 
 interface Skill {
@@ -56,7 +57,42 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <Layout title="Inicio - Ariel Lobos Haoa" description="Desarrollador Full Stack | Ingeniero en Computación | Especialista en React, Node.js y TypeScript">
+    <>
+      <PersonStructuredData
+        name="Ariel Atariki Lobos Haoa"
+        jobTitle="Desarrollador Full Stack"
+        description="Desarrollador Full Stack especializado en React, Node.js, TypeScript y Python con experiencia en liderazgo técnico y desarrollo de soluciones escalables."
+        url="https://atariki.dev"
+        image="https://atariki.dev/profile-image.jpg"
+        sameAs={[
+          "https://github.com/atariki-haoa",
+          "https://linkedin.com/in/atariki-haoa"
+        ]}
+        address={{
+          addressCountry: "Chile",
+          addressLocality: "Santiago"
+        }}
+      />
+      
+      <WebsiteStructuredData
+        name="Ariel Atariki Lobos Haoa - Portfolio"
+        description="Portfolio profesional de Ariel Atariki Lobos Haoa, desarrollador Full Stack especializado en tecnologías modernas."
+        url="https://atariki.dev"
+        author={{
+          name: "Ariel Atariki Lobos Haoa",
+          url: "https://atariki.dev"
+        }}
+        inLanguage="es"
+        copyrightYear={2024}
+      />
+
+      <Layout 
+        title="Ariel Atariki Lobos Haoa - Desarrollador Full Stack | React, Node.js, TypeScript" 
+        description="Desarrollador Full Stack especializado en React, Node.js, TypeScript y Python. Portfolio profesional con experiencia en desarrollo web moderno, liderazgo técnico y soluciones escalables."
+        canonicalUrl="/"
+        keywords="desarrollador full stack, React, Node.js, TypeScript, Python, desarrollador web, portfolio, Chile, Santiago, liderazgo técnico"
+        ogImage="/og-home.jpg"
+      >
       <div className="min-h-screen">
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
@@ -171,7 +207,8 @@ const Home: React.FC = () => {
         
         {selectedSkill && <SkillPopup skill={selectedSkill} onClose={handleClosePopup} />}
       </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };
 

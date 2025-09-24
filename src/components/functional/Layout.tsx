@@ -8,14 +8,58 @@ interface LayoutProps {
   title: string;
   description: string;
   children: React.ReactNode;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  keywords?: string;
+  noIndex?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ title, description, children }) => {
+const Layout: React.FC<LayoutProps> = ({ 
+  title, 
+  description, 
+  children, 
+  canonicalUrl,
+  ogImage = '/og-image.jpg',
+  ogType = 'website',
+  keywords,
+  noIndex = false
+}) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://atariki.dev';
+  const fullCanonicalUrl = canonicalUrl ? `${baseUrl}${canonicalUrl}` : baseUrl;
+  const fullOgImage = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
+
   return (
     <>
       <Head>
+        {/* Title y Description */}
         <title>{title}</title>
         <meta name="description" content={description} />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={fullCanonicalUrl} />
+        
+        {/* Keywords */}
+        {keywords && <meta name="keywords" content={keywords} />}
+        
+        {/* Robots */}
+        <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={fullCanonicalUrl} />
+        <meta property="og:image" content={fullOgImage} />
+        <meta property="og:type" content={ogType} />
+        <meta property="og:site_name" content="Ariel Atariki Lobos Haoa" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={fullOgImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        
+        {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col min-h-screen">
