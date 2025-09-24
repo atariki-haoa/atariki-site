@@ -22,10 +22,10 @@ const Layout: React.FC<LayoutProps> = ({ title, description, children }) => {
         <Header />
         <motion.main
           className="flex-grow"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           {children}
         </motion.main>
