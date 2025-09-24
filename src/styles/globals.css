@@ -250,21 +250,24 @@ header, footer {
 }
 
 /* Floating Navigation Styles */
-.floating-nav {
+.floating-nav-fixed {
   position: fixed !important;
   right: 1.5rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  z-index: 9999 !important;
+  z-index: 999999 !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 0.5rem !important;
+  pointer-events: auto !important;
 }
 
-.floating-nav button {
+.floating-nav-fixed button {
   position: relative !important;
+  pointer-events: auto !important;
 }
 
 .floating-nav-counter {
   position: relative !important;
+  pointer-events: auto !important;
 }

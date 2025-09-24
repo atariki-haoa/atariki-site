@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaRocket, FaUsers, FaCode, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaRocket, FaUsers, FaCode, FaChevronDown } from 'react-icons/fa';
 
 interface ExperienceData {
   id: number;
@@ -134,63 +134,21 @@ const experienceData: ExperienceData[] = [
 ];
 
 const Experience: React.FC = () => {
-  const [currentCard, setCurrentCard] = useState(0);
-  const [isClient, setIsClient] = useState(false);
-
-  const scrollToCard = useCallback((cardIndex: number) => {
-    const cardElement = document.getElementById(`experience-card-${cardIndex}`);
-    if (cardElement) {
-      cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setCurrentCard(cardIndex);
+  const scrollToNextCard = useCallback((currentIndex: number) => {
+    if (currentIndex < experienceData.length - 1) {
+      // Ir a la siguiente tarjeta
+      const nextCardElement = document.getElementById(`experience-card-${currentIndex + 1}`);
+      if (nextCardElement) {
+        nextCardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } else {
+      // Si es la última tarjeta, ir a la sección "Sobre mí"
+      const aboutSection = document.querySelector('section:last-child');
+      if (aboutSection) {
+        aboutSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }, []);
-
-  const handleNextCard = useCallback(() => {
-    const nextIndex = currentCard < experienceData.length - 1 ? currentCard + 1 : 0;
-    scrollToCard(nextIndex);
-  }, [currentCard, scrollToCard]);
-
-  const handlePrevCard = useCallback(() => {
-    const prevIndex = currentCard > 0 ? currentCard - 1 : experienceData.length - 1;
-    scrollToCard(prevIndex);
-  }, [currentCard, scrollToCard]);
-
-  // Set client-side flag
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  // Intersection Observer para detectar qué tarjeta está visible
-  useEffect(() => {
-    if (!isClient) return;
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: 0.1
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const cardId = entry.target.id;
-          const cardIndex = parseInt(cardId.split('-')[2]);
-          setCurrentCard(cardIndex);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    experienceData.forEach((_, index) => {
-      const cardElement = document.getElementById(`experience-card-${index}`);
-      if (cardElement) {
-        observer.observe(cardElement);
-      }
-    });
-
-    return () => observer.disconnect();
-  }, [isClient]);
 
   return (
     <section className="py-12 px-4 relative">
@@ -269,7 +227,7 @@ const Experience: React.FC = () => {
                 )}
 
                 {/* Technologies */}
-                <div>
+                <div className="mb-4">
                   <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
                     <FaCode className="mr-1 text-purple-500" size={12} />
                     Tecnologías
@@ -284,6 +242,18 @@ const Experience: React.FC = () => {
                       </span>
                     ))}
                   </div>
+                </div>
+
+                {/* Next Button */}
+                <div className="flex justify-center pt-3">
+                  <button
+                    onClick={() => scrollToNextCard(index)}
+                    className="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full shadow-md transition-all duration-300 hover:scale-110 group"
+                    aria-label={index < experienceData.length - 1 ? "Ver siguiente experiencia" : "Ver sección Sobre mí"}
+                    title={index < experienceData.length - 1 ? "Ver siguiente experiencia" : "Ver sección Sobre mí"}
+                  >
+                    <FaChevronDown size={12} className="group-hover:animate-bounce" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -326,90 +296,6 @@ const Experience: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Floating Navigation - Only render on client */}
-      {isClient && (
-        <div 
-          style={{
-            position: 'fixed',
-            right: '24px',
-            top: '50vh',
-            transform: 'translateY(-50%)',
-            zIndex: 999999,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            pointerEvents: 'auto'
-          }}
-        >
-        <button
-          onClick={handlePrevCard}
-          style={{
-            backgroundColor: '#2563eb',
-            color: 'white',
-            padding: '16px',
-            borderRadius: '50%',
-            border: '2px solid #60a5fa',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease'
-          }}
-          aria-label="Tarjeta anterior"
-          title="Ver experiencia anterior"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#1d4ed8';
-            e.currentTarget.style.transform = 'scale(1.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          <FaChevronUp size={20} />
-        </button>
-        <div 
-          style={{
-            backgroundColor: '#1f2937',
-            border: '2px solid #4b5563',
-            color: 'white',
-            padding: '8px 12px',
-            borderRadius: '8px',
-            fontSize: '14px',
-            textAlign: 'center',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            fontWeight: 'bold',
-            minWidth: '50px'
-          }}
-        >
-          {currentCard + 1}/{experienceData.length}
-        </div>
-        <button
-          onClick={handleNextCard}
-          style={{
-            backgroundColor: '#2563eb',
-            color: 'white',
-            padding: '16px',
-            borderRadius: '50%',
-            border: '2px solid #60a5fa',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease'
-          }}
-          aria-label="Siguiente tarjeta"
-          title="Ver siguiente experiencia"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#1d4ed8';
-            e.currentTarget.style.transform = 'scale(1.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#2563eb';
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          <FaChevronDown size={20} />
-        </button>
-        </div>
-      )}
     </section>
   );
 };
