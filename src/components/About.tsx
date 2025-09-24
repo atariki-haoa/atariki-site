@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { FaUser, FaComments, FaTools, FaGraduationCap, FaLightbulb, FaStar, FaRocket, FaCogs, FaBrain } from 'react-icons/fa';
+import Experience from './Experience';
 
 const About: React.FC = () => {
   return (
@@ -12,6 +13,9 @@ const About: React.FC = () => {
       </Head>
 
       <main className="flex-1 p-8">
+        {/* Experience Section */}
+        <Experience />
+
         <section className="p-8 bg-gray-800 text-gray-100 rounded-lg my-8">
           <h2 className="text-2xl font-bold text-blue-500 mb-4">
             <FaUser className="inline-block w-6 h-6 mr-2" />

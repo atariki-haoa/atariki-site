@@ -49,7 +49,6 @@ const Home: React.FC = () => {
   }, []);
 
   const handleScrollDown = useCallback(() => {
-    console.log('Scroll button clicked!'); // Debug log
     window.scrollBy({ 
       top: window.innerHeight, 
       behavior: 'smooth' 
@@ -59,24 +58,18 @@ const Home: React.FC = () => {
   return (
     <Layout title="Inicio - Ariel Lobos Haoa" description="Desarrollador Full Stack | Ingeniero en Computación | Especialista en React, Node.js y TypeScript">
       <div className="min-h-screen">
-        {/* Hero Section */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          {/* Background Pattern */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
           
-          {/* Main Content */}
           <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-            {/* Greeting */}
             <div className="mb-6">
               <span className="text-blue-400 text-lg font-medium tracking-wide">¡Hola! Soy</span>
             </div>
             
-            {/* Name */}
             <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
               Ariel Lobos
             </h1>
             
-            {/* Tagline */}
             <div className="mb-8">
               <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-4">
                 Ingeniero en Computación & Desarrollador Full Stack
@@ -87,7 +80,6 @@ const Home: React.FC = () => {
               </p>
             </div>
             
-            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Link 
                 href="/projects" 
@@ -105,7 +97,6 @@ const Home: React.FC = () => {
               </Link>
             </div>
             
-            {/* Skills Preview */}
             <div className="mb-16">
               <p className="text-gray-500 mb-4">Tecnologías principales:</p>
               <div className="flex flex-wrap justify-center items-center gap-6">
@@ -129,7 +120,6 @@ const Home: React.FC = () => {
             </div>
           </div>
           
-          {/* Scroll Indicator - Outside main content */}
           <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
             <button 
               onClick={handleScrollDown}
@@ -141,7 +131,6 @@ const Home: React.FC = () => {
           </div>
         </section>
         
-        {/* About Preview Section */}
         <section id="about-section" className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-3xl font-bold text-gray-200 mb-8">Sobre Mí</h3>
