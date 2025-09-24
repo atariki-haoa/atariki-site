@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import Layout from '../components/Layout';
+import Layout from '../components/functional/Layout';
 import { FaReact, FaNodeJs, FaJs, FaPython, FaArrowDown, FaCode, FaRocket, FaDownload } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
-import SkillPopup from '../components/SkillPopup';
+import SkillPopup from '../components/ui/SkillPopup';
 import Link from 'next/link';
 
 interface Skill {

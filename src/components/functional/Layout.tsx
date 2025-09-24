@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import Header from './Header';
-import Footer from './Footer';
+import Footer from '../ui/Footer';
 
 interface LayoutProps {
   title: string;
