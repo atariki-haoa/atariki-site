@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaRocket, FaUsers, FaCode, FaChevronDown } from 'react-icons/fa';
+import React, { useCallback, useState } from 'react';
+import { FaBriefcase } from 'react-icons/fa';
+import ExperienceCard from './ExperienceCard';
 
 interface ExperienceData {
   id: number;
@@ -134,13 +135,32 @@ const experienceData: ExperienceData[] = [
 ];
 
 const Experience: React.FC = () => {
+  const [expandedCards, setExpandedCards] = useState<number[]>([]);
+
+  const toggleCardExpansion = useCallback((cardIndex: number) => {
+    setExpandedCards(prev => 
+      prev.includes(cardIndex) 
+        ? prev.filter(index => index !== cardIndex)
+        : [...prev, cardIndex]
+    );
+  }, []);
+
   const scrollToNextCard = useCallback((currentIndex: number) => {
     if (currentIndex < experienceData.length - 1) {
-      // Ir a la siguiente tarjeta
-      const nextCardElement = document.getElementById(`experience-card-${currentIndex + 1}`);
-      if (nextCardElement) {
-        nextCardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+      const nextIndex = currentIndex + 1;
+      
+      // Expandir la siguiente tarjeta
+      setExpandedCards(prev => 
+        prev.includes(nextIndex) ? prev : [...prev, nextIndex]
+      );
+      
+      // Hacer scroll a la siguiente tarjeta
+      setTimeout(() => {
+        const nextCardElement = document.getElementById(`experience-card-${nextIndex}`);
+        if (nextCardElement) {
+          nextCardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100); // Pequeño delay para que la expansión comience primero
     } else {
       // Si es la última tarjeta, ir a la sección "Sobre mí"
       const aboutSection = document.querySelector('section:last-child');
@@ -163,99 +183,21 @@ const Experience: React.FC = () => {
           </p>
         </div>
 
-        <div className="relative">
-          {/* Timeline Line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 transform md:-translate-x-1/2"></div>
+        <div className="relative max-w-6xl mx-auto">
+          {/* Timeline Line - Centered */}
+          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 md:transform md:-translate-x-1/2"></div>
 
           {experienceData.map((exp, index) => (
-            <div key={exp.id} id={`experience-card-${index}`} className={`relative mb-8 ${index % 2 === 0 ? 'md:ml-auto md:pl-6' : 'md:mr-auto md:pr-6'} md:w-1/2`}>
-              {/* Timeline Dot */}
-              <div className={`absolute w-4 h-4 bg-blue-500 rounded-full border-2 border-gray-900 top-4 ${index % 2 === 0 ? 'left-6 md:left-auto md:-right-2' : 'left-6 md:right-auto md:-left-2'}`}></div>
-
-              {/* Experience Card */}
-              <div className="ml-12 md:ml-0 bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:transform hover:scale-102">
-                {/* Header */}
-                <div className="mb-4">
-                  <div className="flex flex-wrap items-start gap-2 mb-2">
-                    <h3 className="text-lg font-bold text-gray-200 flex-1">{exp.position}</h3>
-                    <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-                      <FaCalendarAlt className="inline mr-1" />
-                      {exp.period}
-                    </span>
-                  </div>
-                  <h4 className="text-base text-blue-400 font-semibold mb-1">{exp.company}</h4>
-                  <p className="text-gray-400 flex items-center text-sm">
-                    <FaMapMarkerAlt className="mr-1" />
-                    {exp.location}
-                  </p>
-                </div>
-
-                {/* Description */}
-                <p className="text-gray-300 mb-4 leading-relaxed text-sm">{exp.description}</p>
-
-                {/* Achievements */}
-                <div className="mb-4">
-                  <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                    <FaTrophy className="mr-1 text-yellow-500" size={12} />
-                    Logros Principales
-                  </h5>
-                  <ul className="space-y-1">
-                    {exp.achievements.slice(0, 3).map((achievement, i) => (
-                      <li key={i} className="text-gray-300 flex items-start text-xs">
-                        <FaRocket className="mr-2 mt-0.5 text-blue-400 flex-shrink-0" size={10} />
-                        {achievement}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Metrics */}
-                {exp.metrics && (
-                  <div className="mb-4">
-                    <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                      <FaUsers className="mr-1 text-green-500" size={12} />
-                      Métricas
-                    </h5>
-                    <div className="grid grid-cols-3 gap-2">
-                      {exp.metrics.map((metric, i) => (
-                        <div key={i} className="bg-gray-700 rounded-md p-2 text-center">
-                          <span className="text-green-400 font-semibold text-xs break-words leading-tight">{metric}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Technologies */}
-                <div className="mb-4">
-                  <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                    <FaCode className="mr-1 text-purple-500" size={12} />
-                    Tecnologías
-                  </h5>
-                  <div className="flex flex-wrap gap-1">
-                    {exp.technologies.slice(0, 6).map((tech, i) => (
-                      <span
-                        key={i}
-                        className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs hover:bg-purple-600 hover:text-white transition-colors duration-200"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Next Button */}
-                <div className="flex justify-center pt-3">
-                  <button
-                    onClick={() => scrollToNextCard(index)}
-                    className="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full shadow-md transition-all duration-300 hover:scale-110 group"
-                    aria-label={index < experienceData.length - 1 ? "Ver siguiente experiencia" : "Ver sección Sobre mí"}
-                    title={index < experienceData.length - 1 ? "Ver siguiente experiencia" : "Ver sección Sobre mí"}
-                  >
-                    <FaChevronDown size={12} className="group-hover:animate-bounce" />
-                  </button>
-                </div>
-              </div>
+            <div key={exp.id} id={`experience-card-${index}`}>
+              <ExperienceCard
+                experience={exp}
+                index={index}
+                isLast={index === experienceData.length - 1}
+                onNext={scrollToNextCard}
+                isLeft={index % 2 === 0}
+                isExpanded={expandedCards.includes(index)}
+                onToggleExpand={toggleCardExpansion}
+              />
             </div>
           ))}
         </div>
