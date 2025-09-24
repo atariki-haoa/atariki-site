@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaRocket, FaUsers, FaCode } from 'react-icons/fa';
+import React, { useState, useCallback, useEffect } from 'react';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaTrophy, FaRocket, FaUsers, FaCode, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface ExperienceData {
   id: number;
@@ -134,15 +134,73 @@ const experienceData: ExperienceData[] = [
 ];
 
 const Experience: React.FC = () => {
+  const [currentCard, setCurrentCard] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+
+  const scrollToCard = useCallback((cardIndex: number) => {
+    const cardElement = document.getElementById(`experience-card-${cardIndex}`);
+    if (cardElement) {
+      cardElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setCurrentCard(cardIndex);
+    }
+  }, []);
+
+  const handleNextCard = useCallback(() => {
+    const nextIndex = currentCard < experienceData.length - 1 ? currentCard + 1 : 0;
+    scrollToCard(nextIndex);
+  }, [currentCard, scrollToCard]);
+
+  const handlePrevCard = useCallback(() => {
+    const prevIndex = currentCard > 0 ? currentCard - 1 : experienceData.length - 1;
+    scrollToCard(prevIndex);
+  }, [currentCard, scrollToCard]);
+
+  // Set client-side flag
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Intersection Observer para detectar qué tarjeta está visible
+  useEffect(() => {
+    if (!isClient) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0.1
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const cardId = entry.target.id;
+          const cardIndex = parseInt(cardId.split('-')[2]);
+          setCurrentCard(cardIndex);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    experienceData.forEach((_, index) => {
+      const cardElement = document.getElementById(`experience-card-${index}`);
+      if (cardElement) {
+        observer.observe(cardElement);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [isClient]);
+
   return (
-    <section className="py-16 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-200 mb-4">
-            <FaBriefcase className="inline-block w-8 h-8 mr-3 text-blue-400" />
+    <section className="py-12 px-4 relative">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-200 mb-3">
+            <FaBriefcase className="inline-block w-6 h-6 mr-2 text-blue-400" />
             Experiencia Profesional
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Más de 10 años construyendo soluciones tecnológicas innovadoras y liderando equipos de desarrollo
           </p>
         </div>
@@ -152,41 +210,41 @@ const Experience: React.FC = () => {
           <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500 transform md:-translate-x-1/2"></div>
 
           {experienceData.map((exp, index) => (
-            <div key={exp.id} className={`relative mb-16 ${index % 2 === 0 ? 'md:ml-auto md:pl-8' : 'md:mr-auto md:pr-8'} md:w-1/2`}>
+            <div key={exp.id} id={`experience-card-${index}`} className={`relative mb-8 ${index % 2 === 0 ? 'md:ml-auto md:pl-6' : 'md:mr-auto md:pr-6'} md:w-1/2`}>
               {/* Timeline Dot */}
-              <div className={`absolute w-6 h-6 bg-blue-500 rounded-full border-4 border-gray-900 top-6 ${index % 2 === 0 ? 'left-5 md:left-auto md:-right-3' : 'left-5 md:right-auto md:-left-3'}`}></div>
+              <div className={`absolute w-4 h-4 bg-blue-500 rounded-full border-2 border-gray-900 top-4 ${index % 2 === 0 ? 'left-6 md:left-auto md:-right-2' : 'left-6 md:right-auto md:-left-2'}`}></div>
 
               {/* Experience Card */}
-              <div className="ml-16 md:ml-0 bg-gray-800 rounded-2xl p-8 shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 hover:transform hover:scale-105">
+              <div className="ml-12 md:ml-0 bg-gray-800 rounded-xl p-6 shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:transform hover:scale-102">
                 {/* Header */}
-                <div className="mb-6">
-                  <div className="flex flex-wrap items-start gap-2 mb-3">
-                    <h3 className="text-2xl font-bold text-gray-200 flex-1">{exp.position}</h3>
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                <div className="mb-4">
+                  <div className="flex flex-wrap items-start gap-2 mb-2">
+                    <h3 className="text-lg font-bold text-gray-200 flex-1">{exp.position}</h3>
+                    <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
                       <FaCalendarAlt className="inline mr-1" />
                       {exp.period}
                     </span>
                   </div>
-                  <h4 className="text-xl text-blue-400 font-semibold mb-2">{exp.company}</h4>
-                  <p className="text-gray-400 flex items-center">
-                    <FaMapMarkerAlt className="mr-2" />
+                  <h4 className="text-base text-blue-400 font-semibold mb-1">{exp.company}</h4>
+                  <p className="text-gray-400 flex items-center text-sm">
+                    <FaMapMarkerAlt className="mr-1" />
                     {exp.location}
                   </p>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-300 mb-6 leading-relaxed">{exp.description}</p>
+                <p className="text-gray-300 mb-4 leading-relaxed text-sm">{exp.description}</p>
 
                 {/* Achievements */}
-                <div className="mb-6">
-                  <h5 className="text-lg font-semibold text-gray-200 mb-3 flex items-center">
-                    <FaTrophy className="mr-2 text-yellow-500" />
+                <div className="mb-4">
+                  <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
+                    <FaTrophy className="mr-1 text-yellow-500" size={12} />
                     Logros Principales
                   </h5>
-                  <ul className="space-y-2">
-                    {exp.achievements.map((achievement, i) => (
-                      <li key={i} className="text-gray-300 flex items-start">
-                        <FaRocket className="mr-3 mt-1 text-blue-400 flex-shrink-0" size={12} />
+                  <ul className="space-y-1">
+                    {exp.achievements.slice(0, 3).map((achievement, i) => (
+                      <li key={i} className="text-gray-300 flex items-start text-xs">
+                        <FaRocket className="mr-2 mt-0.5 text-blue-400 flex-shrink-0" size={10} />
                         {achievement}
                       </li>
                     ))}
@@ -195,15 +253,15 @@ const Experience: React.FC = () => {
 
                 {/* Metrics */}
                 {exp.metrics && (
-                  <div className="mb-6">
-                    <h5 className="text-lg font-semibold text-gray-200 mb-3 flex items-center">
-                      <FaUsers className="mr-2 text-green-500" />
-                      Métricas de Impacto
+                  <div className="mb-4">
+                    <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
+                      <FaUsers className="mr-1 text-green-500" size={12} />
+                      Métricas
                     </h5>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       {exp.metrics.map((metric, i) => (
-                        <div key={i} className="bg-gray-700 rounded-lg p-3 text-center">
-                          <span className="text-green-400 font-bold text-sm md:text-base break-words leading-tight">{metric}</span>
+                        <div key={i} className="bg-gray-700 rounded-md p-2 text-center">
+                          <span className="text-green-400 font-semibold text-xs break-words leading-tight">{metric}</span>
                         </div>
                       ))}
                     </div>
@@ -212,15 +270,15 @@ const Experience: React.FC = () => {
 
                 {/* Technologies */}
                 <div>
-                  <h5 className="text-lg font-semibold text-gray-200 mb-3 flex items-center">
-                    <FaCode className="mr-2 text-purple-500" />
-                    Tecnologías Utilizadas
+                  <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
+                    <FaCode className="mr-1 text-purple-500" size={12} />
+                    Tecnologías
                   </h5>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.technologies.map((tech, i) => (
+                  <div className="flex flex-wrap gap-1">
+                    {exp.technologies.slice(0, 6).map((tech, i) => (
                       <span
                         key={i}
-                        className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm hover:bg-purple-600 hover:text-white transition-colors duration-200"
+                        className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs hover:bg-purple-600 hover:text-white transition-colors duration-200"
                       >
                         {tech}
                       </span>
@@ -233,41 +291,125 @@ const Experience: React.FC = () => {
         </div>
 
         {/* Summary Stats */}
-        <div className="mt-16 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-center text-gray-200 mb-8">Resumen de Carrera</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="mt-8 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6">
+          <h3 className="text-xl font-bold text-center text-gray-200 mb-6">Resumen de Carrera</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-400 mb-2">14+</div>
-              <div className="text-gray-300">Años de Experiencia</div>
+              <div className="text-2xl font-bold text-blue-400 mb-1">14+</div>
+              <div className="text-gray-300 text-sm">Años de Experiencia</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-400 mb-2">6</div>
-              <div className="text-gray-300">Empresas Diferentes</div>
+              <div className="text-2xl font-bold text-green-400 mb-1">6</div>
+              <div className="text-gray-300 text-sm">Empresas Diferentes</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-400 mb-2">13+</div>
-              <div className="text-gray-300">Tecnologías Dominadas</div>
+              <div className="text-2xl font-bold text-purple-400 mb-1">13+</div>
+              <div className="text-gray-300 text-sm">Tecnologías Dominadas</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-400 mb-2">B1</div>
-              <div className="text-gray-300">Nivel de Inglés</div>
+              <div className="text-2xl font-bold text-yellow-400 mb-1">B1</div>
+              <div className="text-gray-300 text-sm">Nivel de Inglés</div>
             </div>
           </div>
           
           {/* Technical Skills Highlight */}
-          <div className="mt-8 text-center">
-            <h4 className="text-lg font-semibold text-gray-200 mb-4">Especialidades Técnicas Destacadas</h4>
-            <div className="flex flex-wrap justify-center gap-3">
-              <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm">JavaScript (6 años)</span>
-              <span className="bg-green-600 text-white px-4 py-2 rounded-full text-sm">Node.js (6 años)</span>
-              <span className="bg-purple-600 text-white px-4 py-2 rounded-full text-sm">TypeScript (5 años)</span>
-              <span className="bg-red-600 text-white px-4 py-2 rounded-full text-sm">React (4 años)</span>
-              <span className="bg-yellow-600 text-white px-4 py-2 rounded-full text-sm">Linux (10+ años)</span>
-              <span className="bg-cyan-600 text-white px-4 py-2 rounded-full text-sm">Git (7 años)</span>
+          <div className="mt-6 text-center">
+            <h4 className="text-base font-semibold text-gray-200 mb-3">Especialidades Técnicas Destacadas</h4>
+            <div className="flex flex-wrap justify-center gap-2">
+              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs">JavaScript (6 años)</span>
+              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs">Node.js (6 años)</span>
+              <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs">TypeScript (5 años)</span>
+              <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs">React (4 años)</span>
+              <span className="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs">Linux (10+ años)</span>
+              <span className="bg-cyan-600 text-white px-3 py-1 rounded-full text-xs">Git (7 años)</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Floating Navigation - Only render on client */}
+      {isClient && (
+        <div 
+          style={{
+            position: 'fixed',
+            right: '24px',
+            top: '50vh',
+            transform: 'translateY(-50%)',
+            zIndex: 999999,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            pointerEvents: 'auto'
+          }}
+        >
+        <button
+          onClick={handlePrevCard}
+          style={{
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '16px',
+            borderRadius: '50%',
+            border: '2px solid #60a5fa',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          aria-label="Tarjeta anterior"
+          title="Ver experiencia anterior"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#1d4ed8';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          <FaChevronUp size={20} />
+        </button>
+        <div 
+          style={{
+            backgroundColor: '#1f2937',
+            border: '2px solid #4b5563',
+            color: 'white',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            textAlign: 'center',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            fontWeight: 'bold',
+            minWidth: '50px'
+          }}
+        >
+          {currentCard + 1}/{experienceData.length}
+        </div>
+        <button
+          onClick={handleNextCard}
+          style={{
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '16px',
+            borderRadius: '50%',
+            border: '2px solid #60a5fa',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          aria-label="Siguiente tarjeta"
+          title="Ver siguiente experiencia"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#1d4ed8';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#2563eb';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          <FaChevronDown size={20} />
+        </button>
+        </div>
+      )}
     </section>
   );
 };

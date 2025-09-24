@@ -1,32 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaGithub, FaLinkedin, FaHome, FaUser, FaProjectDiagram, FaEnvelope } from 'react-icons/fa';
-import ReactTooltip from 'react-tooltip';
 
 const Header: React.FC = () => {
   return (
     <header className="bg-gray-800 text-gray-100 p-4">
       <nav className="flex justify-center space-x-4">
-        <Link href="/" className="menu-item" aria-label="Inicio" data-tip="Inicio">
+        <Link href="/" className="menu-item" aria-label="Inicio" title="Inicio">
           <FaHome className="text-2xl" />
         </Link>
-        <Link href="/about" className="menu-item" aria-label="Sobre mí" data-tip="Sobre mí">
+        <Link href="/about" className="menu-item" aria-label="Sobre mí" title="Sobre mí">
           <FaUser className="text-2xl" />
         </Link>
-        <Link href="/projects" className="menu-item" aria-label="Proyectos" data-tip="Proyectos">
+        <Link href="/projects" className="menu-item" aria-label="Proyectos" title="Proyectos">
           <FaProjectDiagram className="text-2xl" />
         </Link>
-        <Link href="/contact" className="menu-item" aria-label="Contacto" data-tip="Contacto">
+        <Link href="/contact" className="menu-item" aria-label="Contacto" title="Contacto">
           <FaEnvelope className="text-2xl" />
         </Link>
-        <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tip="GitHub">
+        <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
           <FaGithub className="text-2xl" />
         </a>
-        <a href="https://www.linkedin.com/in/arieloboshaoa/" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-tip="LinkedIn">
+        <a href="https://www.linkedin.com/in/arieloboshaoa/" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
           <FaLinkedin className="text-2xl" />
         </a>
       </nav>
-      <ReactTooltip place="bottom" type="dark" effect="solid" />
     </header>
   );
 };
