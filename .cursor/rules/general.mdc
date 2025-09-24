@@ -1,0 +1,10 @@
+---
+description: General rule set
+globs:
+alwaysApply: true
+---
+
+## Code Comments Policy
+- Do not add comments to code unless explicitly requested by the user
+- Only include comments when specifically asked for documentation or explanation
+- Keep code clean and self-explanatory without unnecessary inline comments
