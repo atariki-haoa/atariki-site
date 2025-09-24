@@ -1,5 +1,5 @@
-import Layout from '../components/Layout';
-import Skills from '../components/Skills';
+import Layout from '../components/functional/Layout';
+import Skills from '../components/sections/Skills';
 
 const SkillsPage: React.FC = () => {
   return (

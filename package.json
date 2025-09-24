@@ -1,16 +1,47 @@
 {
   "name": "atariki-site",
   "version": "1.0.0",
-  "description": "",
+  "description": "Portfolio profesional de Ariel Atariki Lobos Haoa - Desarrollador Full Stack especializado en React, Node.js, TypeScript y Python",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next export"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "desarrollador",
+    "full stack",
+    "React",
+    "Node.js",
+    "TypeScript",
+    "Python",
+    "portfolio",
+    "desarrollo web",
+    "Chile",
+    "Santiago",
+    "liderazgo técnico",
+    "JavaScript",
+    "Next.js",
+    "MongoDB",
+    "Express",
+    "Tailwind CSS"
+  ],
+  "author": {
+    "name": "Ariel Atariki Lobos Haoa",
+    "email": "contacto@atariki.dev",
+    "url": "https://atariki.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://atariki.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atariki-haoa/atariki-site"
+  },
+  "bugs": {
+    "url": "https://github.com/atariki-haoa/atariki-site/issues"
+  },
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@types/dompurify": "^3.0.5",

@@ -1,0 +1,24 @@
+---
+description: General rule set
+globs:
+alwaysApply: true
+---
+
+## Code Comments Policy
+- Do not add comments to code unless explicitly requested by the user
+- Only include comments when specifically asked for documentation or explanation
+- Keep code clean and self-explanatory without unnecessary inline comments
+
+
+## Coding rules
+
+### Component Architecture
+- Always analyze component reusability and separate into:
+  - **UX/UI**: Pure UI components without business logic
+  - **Logical**: Components that handle state and business logic
+  - **Sections**: Components that represent complete application sections
+
+### Data Management
+- Always use data from JSON files located in the `data/` folder
+- Avoid hardcoding data directly in components
+- Maintain separation between data and presentation
