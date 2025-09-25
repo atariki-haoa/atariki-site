@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import Layout from '../components/functional/Layout';
 import { FaReact, FaNodeJs, FaJs, FaPython, FaArrowDown, FaCode, FaRocket, FaDownload } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
@@ -205,7 +206,15 @@ const Home: React.FC = () => {
           </div>
         </section>
         
-        {selectedSkill && <SkillPopup skill={selectedSkill} onClose={handleClosePopup} />}
+        <AnimatePresence mode="wait">
+          {selectedSkill && (
+            <SkillPopup 
+              key={`skill-${selectedSkill.id}`} 
+              skill={selectedSkill} 
+              onClose={handleClosePopup} 
+            />
+          )}
+        </AnimatePresence>
       </div>
       </Layout>
     </>

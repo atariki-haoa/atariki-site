@@ -1,5 +1,7 @@
 import React from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { createPortal } from 'react-dom';
+import { motion } from 'framer-motion';
+import styles from '../../styles/SkillPopup.module.css';
 
 interface SkillPopupProps {
     skill: {
@@ -11,27 +13,67 @@ interface SkillPopupProps {
 }
 
 const SkillPopup: React.FC<SkillPopupProps> = ({ skill, onClose }) => {
-    return (
+    const backdropVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 }
+    };
+
+    const popupVariants = {
+        hidden: { 
+            opacity: 0, 
+            scale: 0.9,
+            y: "-50%",
+            x: "-50%"
+        },
+        visible: { 
+            opacity: 1, 
+            scale: 1,
+            y: "-50%",
+            x: "-50%"
+        }
+    };
+
+    const popupContent = (
         <>
-            <div className="bg-black opacity-50 fixed inset-0" onClick={onClose}></div>
-            <CSSTransition
-                in={true}
-                appear={true}
-                timeout={300}
-                classNames="popup"
-                unmountOnExit
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={backdropVariants}
+                transition={{ duration: 0.3 }}
+                onClick={onClose}
+                className={styles.backdrop}
+            />
+            <motion.div
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={popupVariants}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className={styles.popupContainer}
             >
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-gray-800 text-gray-100 p-6 rounded-lg shadow-lg relative z-10 max-w-sm">
-                        <h3 className="text-xl font-bold">{skill.name}</h3>
-                        <p className="text-sm">{skill.description}</p>
-                        <p className="text-sm font-semibold mt-2">Experiencia: {skill.experience}</p>
-                        <button onClick={onClose} className="mt-4 bg-blue-500 text-white py-1 px-3 rounded">Cerrar</button>
-                    </div>
+                <div className={styles.popupContent}>
+                    <h3 className={styles.popupTitle}>
+                        {skill.name}
+                    </h3>
+                    <p className={styles.popupDescription}>
+                        {skill.description}
+                    </p>
+                    <p className={styles.popupExperience}>
+                        Experiencia: {skill.experience}
+                    </p>
+                    <button 
+                        onClick={onClose} 
+                        className={styles.popupButton}
+                    >
+                        Cerrar
+                    </button>
                 </div>
-            </CSSTransition>
+            </motion.div>
         </>
     );
+
+    return createPortal(popupContent, document.body);
 };
 
 export default SkillPopup;

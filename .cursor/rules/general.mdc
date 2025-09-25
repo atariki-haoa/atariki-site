@@ -22,3 +22,7 @@ alwaysApply: true
 - Always use data from JSON files located in the `data/` folder
 - Avoid hardcoding data directly in components
 - Maintain separation between data and presentation
+
+## Styling Rules
+
+- Avoid in-line styles on html tags
