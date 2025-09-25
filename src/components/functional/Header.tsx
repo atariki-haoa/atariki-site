@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaGithub, FaLinkedin, FaHome, FaUser, FaProjectDiagram, FaEnvelope } from 'react-icons/fa';
+import ReactTooltip from 'react-tooltip';
 
 const Header: React.FC = () => {
   return (
@@ -18,13 +19,14 @@ const Header: React.FC = () => {
         <Link href="/contact" className="menu-item" aria-label="Contacto" title="Contacto">
           <FaEnvelope className="text-2xl" />
         </Link>
-        <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+        <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tip="GitHub">
           <FaGithub className="text-2xl" />
         </a>
         <a href="https://www.linkedin.com/in/arieloboshaoa/" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
           <FaLinkedin className="text-2xl" />
         </a>
       </nav>
+      <ReactTooltip />
     </header>
   );
 };
