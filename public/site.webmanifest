@@ -1,0 +1,17 @@
+{
+  "name": "Ariel Atariki Lobos Haoa - Portfolio",
+  "short_name": "Atariki Portfolio",
+  "description": "Portfolio profesional de Ariel Atariki Lobos Haoa - Desarrollador Full Stack",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}
