@@ -19,12 +19,12 @@ const Header: React.FC = () => {
         <Link href="/contact" className="menu-item" aria-label="Contacto" title="Contacto">
           <FaEnvelope className="text-2xl" />
         </Link>
-        <a href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tip="GitHub">
+        <Link href="https://github.com/atariki-haoa" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-tip="GitHub">
           <FaGithub className="text-2xl" />
-        </a>
-        <a href="https://www.linkedin.com/in/arieloboshaoa/" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+        </Link>
+        <Link href="https://www.linkedin.com/in/arieloboshaoa/" className="menu-item" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
           <FaLinkedin className="text-2xl" />
-        </a>
+        </Link>
       </nav>
       <ReactTooltip />
     </header>
