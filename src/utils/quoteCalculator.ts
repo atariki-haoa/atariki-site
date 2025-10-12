@@ -1,3 +1,5 @@
+import type { Locale } from '../types/locale';
+
 export type QuoteTechnology = 'web_app' | 'integrations' | 'mobile_app' | 'other';
 
 export interface QuoteInput {
@@ -7,6 +9,7 @@ export interface QuoteInput {
 }
 
 export interface QuotePhase {
+  id: string;
   name: string;
   percentage: number;
   minAmount: number;
@@ -22,22 +25,107 @@ export interface QuoteEstimate {
     max: number;
   };
   recommendedTimelineWeeks: number;
-  complexity: 'Baja' | 'Media' | 'Alta';
-  timelinePressure: 'Muy alta' | 'Alta' | 'Media' | 'Baja';
-  budgetAdequacy: 'Ajustado' | 'Adecuado' | 'Amplio';
+  complexity: string;
+  timelinePressure: string;
+  budgetAdequacy: string;
   phases: QuotePhase[];
   suggestions: string[];
-  confidence: 'Alta' | 'Media' | 'Baja';
+  confidence: string;
 }
 
 const MINIMUM_BUDGET = 1_000_000;
 
-const phasesTemplate: Array<{ name: string; percentage: number }> = [
-  { name: 'Descubrimiento y definición', percentage: 0.2 },
-  { name: 'Diseño y UX', percentage: 0.15 },
-  { name: 'Desarrollo e implementación', percentage: 0.45 },
-  { name: 'QA y validaciones', percentage: 0.15 },
-  { name: 'Despliegue y soporte inicial', percentage: 0.05 },
+const COMPLEXITY_LABELS: Record<Locale, Record<'low' | 'medium' | 'high', string>> = {
+  es: { low: 'Baja', medium: 'Media', high: 'Alta' },
+  en: { low: 'Low', medium: 'Medium', high: 'High' },
+};
+
+const PRESSURE_LABELS: Record<Locale, Record<'very_high' | 'high' | 'medium' | 'low', string>> = {
+  es: {
+    very_high: 'Muy alta',
+    high: 'Alta',
+    medium: 'Media',
+    low: 'Baja',
+  },
+  en: {
+    very_high: 'Very high',
+    high: 'High',
+    medium: 'Medium',
+    low: 'Low',
+  },
+};
+
+const BUDGET_ADEQUACY_LABELS: Record<Locale, Record<'tight' | 'adequate' | 'ample', string>> = {
+  es: {
+    tight: 'Ajustado',
+    adequate: 'Adecuado',
+    ample: 'Amplio',
+  },
+  en: {
+    tight: 'Tight',
+    adequate: 'Adequate',
+    ample: 'Ample',
+  },
+};
+
+const CONFIDENCE_LABELS: Record<Locale, Record<'low' | 'medium' | 'high', string>> = {
+  es: {
+    low: 'Baja',
+    medium: 'Media',
+    high: 'Alta',
+  },
+  en: {
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High',
+  },
+};
+
+const phasesTemplate: Array<{
+  id: string;
+  percentage: number;
+  name: Record<Locale, string>;
+}> = [
+  {
+    id: 'discovery',
+    percentage: 0.2,
+    name: {
+      es: 'Descubrimiento y definición',
+      en: 'Discovery & Definition',
+    },
+  },
+  {
+    id: 'design',
+    percentage: 0.15,
+    name: {
+      es: 'Diseño y UX',
+      en: 'Design & UX',
+    },
+  },
+  {
+    id: 'development',
+    percentage: 0.45,
+    name: {
+      es: 'Desarrollo e implementación',
+      en: 'Development & Implementation',
+    },
+  },
+  {
+    id: 'qa',
+    percentage: 0.15,
+    name: {
+      es: 'QA y validaciones',
+      en: 'QA & Validation',
+    },
+  },
+  {
+    id: 'launch',
+    percentage: 0.05,
+    name: {
+      es: 'Despliegue y soporte inicial',
+      en: 'Launch & Initial Support',
+    },
+  },
 ];
 
 const technologyConfig: Record<
@@ -45,56 +133,129 @@ const technologyConfig: Record<
   {
     baseComplexity: number;
     baseTimelineWeeks: number;
-    suggestions: string[];
+    suggestions: Record<Locale, string[]>;
   }
 > = {
   web_app: {
     baseComplexity: 1,
     baseTimelineWeeks: 10,
-    suggestions: [
-      'Esto sera un MVP, las funcionalidades avanzadas pueden quedar para fases posteriores.',
-      'Reutilizar es la clave, entre mas funcionalidades que podamos reutilizar, mejor.',
-      'Considera pruebas de usabilidad validadas previamente con alguna otra tecnología, ejemplo, excel, figma, etc.',
-    ],
+    suggestions: {
+      es: [
+        'Esto será un MVP, las funcionalidades avanzadas pueden quedar para fases posteriores.',
+        'Reutilizar componentes y librerías existentes ayudará a mantener el alcance controlado.',
+        'Considera validar la experiencia con prototipos rápidos (Excel, Figma, etc.) antes del desarrollo.',
+      ],
+      en: [
+        'Treat this as an MVP; advanced features can move into later phases.',
+        'Favor reusing existing components and libraries to keep scope under control.',
+        'Validate usability with quick prototypes (Excel, Figma, etc.) before building features.',
+      ],
+    },
   },
   integrations: {
     baseComplexity: 1.3,
     baseTimelineWeeks: 14,
-    suggestions: [
-      'No es mucho tiempo, pero es suficiente para un proyecto bien acotado.',
-      'Considera que solo tendremos 2 semanas para pruebas, asi que planifica en consecuencia.',
-      'Si tiene integraciones, asegurate de tener las APIs bien documentadas y accesibles.',
-    ],
+    suggestions: {
+      es: [
+        'El tiempo es acotado pero suficiente para un proyecto bien definido.',
+        'Solo contaremos con 2 semanas para pruebas, planifica la disponibilidad de ambientes.',
+        'Asegúrate de que las APIs estén documentadas y accesibles desde el inicio.',
+      ],
+      en: [
+        'The timeline is tight but sufficient for a well-scoped project.',
+        'We will only have 2 weeks for testing; secure environments ahead of time.',
+        'Make sure all APIs are documented and accessible from day one.',
+      ],
+    },
   },
   mobile_app: {
     baseComplexity: 1.6,
     baseTimelineWeeks: 18,
-    suggestions: [
-      'Con este tiempo podemos hacer un buen MVP, pero no esperes funcionalidades muy complejas.',
-      'Considera al menos 1 mes para pruebas y ajustes post-feedback inicial.',
-      'Tendremos reuniones de seguimiento quincenales para asegurar que vamos por buen camino.',
-    ],
+    suggestions: {
+      es: [
+        'Con este tiempo lograremos un buen MVP, evita funcionalidades demasiado complejas al inicio.',
+        'Reserva al menos 1 mes para pruebas y ajustes tras el primer feedback.',
+        'Programa reuniones de seguimiento cada dos semanas para mantener alineación.',
+      ],
+      en: [
+        'This timeframe supports a solid MVP; keep advanced features for later iterations.',
+        'Allocate at least 1 month for testing and adjustments after the first feedback round.',
+        'Schedule bi-weekly follow-ups to keep the roadmap aligned.',
+      ],
+    },
   },
   other: {
     baseComplexity: 1.8,
     baseTimelineWeeks: 20,
-    suggestions: [
-      'La iteracion es la clave para proyectos complejos.',
-      'Considera un MVP acotado antes de abordar personalizaciones complejas.',
-      'Evalúa integrar monitoreo y alertas desde el inicio para reducir riesgos.',
-    ],
+    suggestions: {
+      es: [
+        'La iteración continua es clave para proyectos complejos.',
+        'Prioriza un MVP acotado antes de implementar personalizaciones avanzadas.',
+        'Integra monitoreo y alertas desde el inicio para reducir riesgos.',
+      ],
+      en: [
+        'Iterative delivery is essential for complex initiatives.',
+        'Prioritize a focused MVP before investing in extensive customizations.',
+        'Introduce monitoring and alerting from the start to reduce operational risk.',
+      ],
+    },
   },
 };
 
-const timelineConfig = [
-  { maxMonths: 1, multiplier: 1.6, pressure: 'Muy alta' as const },
-  { maxMonths: 2, multiplier: 1.4, pressure: 'Muy alta' as const },
-  { maxMonths: 3, multiplier: 1.2, pressure: 'Alta' as const },
-  { maxMonths: 6, multiplier: 1.05, pressure: 'Media' as const },
-  { maxMonths: 9, multiplier: 0.95, pressure: 'Baja' as const },
-  { maxMonths: 12, multiplier: 0.9, pressure: 'Baja' as const },
-  { maxMonths: Infinity, multiplier: 0.85, pressure: 'Baja' as const },
+const timelineConfig: Array<{
+  maxMonths: number;
+  multiplier: number;
+  pressure: 'very_high' | 'high' | 'medium' | 'low';
+}> = [
+  { maxMonths: 1, multiplier: 1.6, pressure: 'very_high' },
+  { maxMonths: 2, multiplier: 1.4, pressure: 'very_high' },
+  { maxMonths: 3, multiplier: 1.2, pressure: 'high' },
+  { maxMonths: 6, multiplier: 1.05, pressure: 'medium' },
+  { maxMonths: 9, multiplier: 0.95, pressure: 'low' },
+  { maxMonths: 12, multiplier: 0.9, pressure: 'low' },
+  { maxMonths: Infinity, multiplier: 0.85, pressure: 'low' },
 ];
+
+const TIMELINE_SUGGESTIONS: Record<
+  'very_high' | 'high' | 'long',
+  Record<Locale, string[]>
+> = {
+  very_high: {
+    es: [
+      'Agenda reuniones semanales para monitorear avance y desbloquear dependencias a tiempo.',
+      'Define un MVP muy acotado; la priorización será clave para cumplir plazos.',
+    ],
+    en: [
+      'Schedule weekly check-ins to track progress and unblock dependencies quickly.',
+      'Define a very focused MVP; ruthless prioritization will keep the timeline realistic.',
+    ],
+  },
+  high: {
+    es: ['La priorización es clave: define un MVP claro y enfócate en lo esencial.'],
+    en: ['Prioritize aggressively: define a clear MVP and focus on essentials.'],
+  },
+  long: {
+    es: ['Planifica iteraciones cortas luego del MVP inicial para capitalizar el aprendizaje.'],
+    en: ['Plan short iterations after the initial MVP to capitalize on learning.'],
+  },
+};
+
+const BUDGET_SUGGESTIONS: Record<'tight' | 'ample', Record<Locale, string[]>> = {
+  tight: {
+    es: [
+      'Revisa el alcance y considera dividir funcionalidades avanzadas en fases posteriores.',
+      'Reutiliza activos existentes para mantener el presupuesto dentro de lo proyectado.',
+    ],
+    en: [
+      'Review scope and consider moving advanced features to later phases.',
+      'Reuse existing assets wherever possible to stay within the projected budget.',
+    ],
+  },
+  ample: {
+    es: ['Destina parte del presupuesto a QA automatizado y monitoreo en producción.'],
+    en: ['Invest part of the budget in automated QA and production monitoring.'],
+  },
+};
 
 const roundToNearestThousand = (value: number) => Math.round(value / 1000) * 1000;
 
@@ -103,11 +264,12 @@ const clampTimelineMonths = (timelineMonths: number) => {
   return Math.min(Math.max(1, Math.round(months)), 24);
 };
 
-export const calculateQuoteEstimate = ({
-  budget,
-  technology,
-  timelineMonths,
-}: QuoteInput): QuoteEstimate => {
+export const calculateQuoteEstimate = (
+  { budget, technology, timelineMonths }: QuoteInput,
+  locale: Locale = 'es'
+): QuoteEstimate => {
+  const isSpanish = locale === 'es';
+
   const normalizedBudget = Math.max(MINIMUM_BUDGET, budget || MINIMUM_BUDGET);
   const normalizedTimelineMonths = clampTimelineMonths(timelineMonths);
 
@@ -139,8 +301,8 @@ export const calculateQuoteEstimate = ({
     complexityScore -= 0.1;
   }
 
-  const complexity =
-    complexityScore < 1.3 ? 'Baja' : complexityScore < 1.6 ? 'Media' : 'Alta';
+  const complexityKey: 'low' | 'medium' | 'high' =
+    complexityScore < 1.3 ? 'low' : complexityScore < 1.6 ? 'medium' : 'high';
 
   let recommendedCore = targetCost;
 
@@ -186,61 +348,52 @@ export const calculateQuoteEstimate = ({
 
   const recommendedTimelineWeeks = Math.max(
     4,
-    Math.round(
-      Math.max(baselineTimelineWeeks + timelineAdjustment, requestedTimelineWeeks)
-    )
+    Math.round(Math.max(baselineTimelineWeeks + timelineAdjustment, requestedTimelineWeeks))
   );
 
-  const budgetAdequacy =
-    budgetAlignment < 0.9 ? 'Ajustado' : budgetAlignment > 1.3 ? 'Amplio' : 'Adecuado';
+  const budgetAdequacyKey: 'tight' | 'adequate' | 'ample' =
+    budgetAlignment < 0.9 ? 'tight' : budgetAlignment > 1.3 ? 'ample' : 'adequate';
 
-  let confidence: QuoteEstimate['confidence'] = 'Alta';
+  let confidenceKey: 'low' | 'medium' | 'high' = 'high';
 
   if (normalizedTimelineMonths <= 2 || budgetAlignment < 0.75) {
-    confidence = 'Media';
+    confidenceKey = 'medium';
   }
 
   if (normalizedTimelineMonths <= 1 || budgetAlignment < 0.6) {
-    confidence = 'Baja';
+    confidenceKey = 'low';
   }
 
-  if (confidence !== 'Baja' && normalizedTimelineMonths >= 9 && budgetAlignment >= 1.2) {
-    confidence = 'Alta';
+  if (confidenceKey !== 'low' && normalizedTimelineMonths >= 9 && budgetAlignment >= 1.2) {
+    confidenceKey = 'high';
   }
 
-  const phases: QuotePhase[] = phasesTemplate.map(({ name, percentage }) => ({
-    name,
+  const phases: QuotePhase[] = phasesTemplate.map(({ id, percentage, name }) => ({
+    id,
+    name: name[locale],
     percentage,
     minAmount: roundToNearestThousand(recommendedMin * percentage),
     maxAmount: roundToNearestThousand(recommendedMax * percentage),
     averageAmount: roundToNearestThousand(recommendedMid * percentage),
   }));
 
-  const suggestions = [
-    ...tech.suggestions,
-    ...(timelineProfile.pressure === 'Muy alta'
-      ? [
-          'Agenda reuniones de seguimiento semanales para controlar avance y desbloquear dependencias.',
-          'Define un MVP muy acotado, la priorización será clave.',
-        ]
-      : timelineProfile.pressure === 'Alta'
-      ? [
-          'Priorizar es tu pastor, define un MVP claro y enfócate en eso.',
-        ]
-      : normalizedTimelineMonths >= 9
-      ? [
-          'Aca iteraremos, idealmente con un buen MVP inicial y luego iteraciones cortas.',
-        ]
-      : []),
-    ...(budgetAdequacy === 'Ajustado'
-      ? [
-          'Revisa alcance y considera dividir funcionalidades avanzadas en hitos posteriores.',
-          'Evalúa reutilizar assets existentes para mantener el presupuesto dentro de lo proyectado.',
-        ]
-      : budgetAdequacy === 'Amplio'
-      ? ['Destina parte del presupuesto a QA automatizado y monitoreo en producción.']
-      : []),
-  ];
+  const suggestions: string[] = [];
+
+  suggestions.push(...tech.suggestions[locale]);
+
+  if (timelineProfile.pressure === 'very_high') {
+    suggestions.push(...TIMELINE_SUGGESTIONS.very_high[locale]);
+  } else if (timelineProfile.pressure === 'high') {
+    suggestions.push(...TIMELINE_SUGGESTIONS.high[locale]);
+  } else if (normalizedTimelineMonths >= 9) {
+    suggestions.push(...TIMELINE_SUGGESTIONS.long[locale]);
+  }
+
+  if (budgetAdequacyKey === 'tight') {
+    suggestions.push(...BUDGET_SUGGESTIONS.tight[locale]);
+  } else if (budgetAdequacyKey === 'ample') {
+    suggestions.push(...BUDGET_SUGGESTIONS.ample[locale]);
+  }
 
   return {
     requestedBudget: normalizedBudget,
@@ -250,11 +403,11 @@ export const calculateQuoteEstimate = ({
       max: recommendedMax,
     },
     recommendedTimelineWeeks,
-    complexity,
-    timelinePressure: timelineProfile.pressure,
-    budgetAdequacy,
+    complexity: COMPLEXITY_LABELS[locale][complexityKey],
+    timelinePressure: PRESSURE_LABELS[locale][timelineProfile.pressure],
+    budgetAdequacy: BUDGET_ADEQUACY_LABELS[locale][budgetAdequacyKey],
     phases,
     suggestions,
-    confidence,
+    confidence: CONFIDENCE_LABELS[locale][confidenceKey],
   };
 };

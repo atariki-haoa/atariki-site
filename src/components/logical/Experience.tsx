@@ -1,27 +1,64 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { FaBriefcase } from 'react-icons/fa';
 import ExperienceCard from '../ui/ExperienceCard';
-import rawExperienceData from '../../data/experience.json';
-
-interface ExperienceData {
-  id: number;
-  company: string;
-  position: string;
-  period: string;
-  location: string;
-  description: string;
-  achievements: string[];
-  technologies: string[];
-  metrics?: string[];
-}
-
-const experienceData: ExperienceData[] = [
-  ...rawExperienceData,
-];
+import { useLanguage } from '../../context/LanguageContext';
+import { getExperienceData, type ExperienceData } from '../../data/experience';
 
 const Experience: React.FC = () => {
   const [expandedCards, setExpandedCards] = useState<number[]>([]);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
+
+  const experienceData = useMemo(() => getExperienceData(locale), [locale]);
+
+  const copy = useMemo(
+    () =>
+      isSpanish
+        ? {
+            heading: 'Experiencia Profesional',
+            subtitle:
+              'Más de 10 años construyendo soluciones tecnológicas innovadoras y liderando equipos de desarrollo',
+            summaryHeading: 'Resumen de Carrera',
+            stats: [
+              { value: '14+', label: 'Años de Experiencia', color: 'text-blue-400' },
+              { value: '6', label: 'Empresas Diferentes', color: 'text-green-400' },
+              { value: '13+', label: 'Tecnologías Dominadas', color: 'text-purple-400' },
+              { value: 'B1', label: 'Nivel de Inglés', color: 'text-yellow-400' },
+            ],
+            skillsHeading: 'Especialidades Técnicas Destacadas',
+            skillTags: [
+              { label: 'JavaScript (6 años)', colorClass: 'bg-blue-600' },
+              { label: 'Node.js (6 años)', colorClass: 'bg-green-600' },
+              { label: 'TypeScript (5 años)', colorClass: 'bg-purple-600' },
+              { label: 'React (4 años)', colorClass: 'bg-red-600' },
+              { label: 'Linux (10+ años)', colorClass: 'bg-yellow-600' },
+              { label: 'Git (7 años)', colorClass: 'bg-cyan-600' },
+            ],
+          }
+        : {
+            heading: 'Professional Experience',
+            subtitle:
+              'Over 10 years building innovative technology solutions and leading high-impact engineering teams',
+            summaryHeading: 'Career Snapshot',
+            stats: [
+              { value: '14+', label: 'Years of Experience', color: 'text-blue-400' },
+              { value: '6', label: 'Companies', color: 'text-green-400' },
+              { value: '13+', label: 'Technologies Mastered', color: 'text-purple-400' },
+              { value: 'B1', label: 'English Level', color: 'text-yellow-400' },
+            ],
+            skillsHeading: 'Highlighted Technical Expertise',
+            skillTags: [
+              { label: 'JavaScript (6 years)', colorClass: 'bg-blue-600' },
+              { label: 'Node.js (6 years)', colorClass: 'bg-green-600' },
+              { label: 'TypeScript (5 years)', colorClass: 'bg-purple-600' },
+              { label: 'React (4 years)', colorClass: 'bg-red-600' },
+              { label: 'Linux (10+ years)', colorClass: 'bg-yellow-600' },
+              { label: 'Git (7 years)', colorClass: 'bg-cyan-600' },
+            ],
+          },
+    [isSpanish]
+  );
 
   // Actualizar el año automáticamente
   useEffect(() => {
@@ -40,9 +77,9 @@ const Experience: React.FC = () => {
 
   const toggleCardExpansion = useCallback((cardIndex: number) => {
     setExpandedCards(prev => 
-      prev.includes(cardIndex) 
-        ? prev.filter(index => index !== cardIndex)
-        : [...prev, cardIndex]
+          prev.includes(cardIndex) 
+            ? prev.filter(index => index !== cardIndex)
+            : [...prev, cardIndex]
     );
   }, []);
 
@@ -77,10 +114,10 @@ const Experience: React.FC = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-200 mb-3">
             <FaBriefcase className="inline-block w-6 h-6 mr-2 text-blue-400" />
-            Experiencia Profesional
+            {copy.heading}
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Más de 10 años construyendo soluciones tecnológicas innovadoras y liderando equipos de desarrollo
+            {copy.subtitle}
           </p>
         </div>
 
@@ -114,36 +151,28 @@ const Experience: React.FC = () => {
 
         {/* Summary Stats */}
         <div className="mt-8 bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-center text-gray-200 mb-6">Resumen de Carrera</h3>
+          <h3 className="text-xl font-bold text-center text-gray-200 mb-6">{copy.summaryHeading}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400 mb-1">14+</div>
-              <div className="text-gray-300 text-sm">Años de Experiencia</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-400 mb-1">6</div>
-              <div className="text-gray-300 text-sm">Empresas Diferentes</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400 mb-1">13+</div>
-              <div className="text-gray-300 text-sm">Tecnologías Dominadas</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-400 mb-1">B1</div>
-              <div className="text-gray-300 text-sm">Nivel de Inglés</div>
-            </div>
+            {copy.stats.map(stat => (
+              <div key={stat.label} className="text-center">
+                <div className={`text-2xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
+                <div className="text-gray-300 text-sm">{stat.label}</div>
+              </div>
+            ))}
           </div>
           
           {/* Technical Skills Highlight */}
           <div className="mt-6 text-center">
-            <h4 className="text-base font-semibold text-gray-200 mb-3">Especialidades Técnicas Destacadas</h4>
+            <h4 className="text-base font-semibold text-gray-200 mb-3">{copy.skillsHeading}</h4>
             <div className="flex flex-wrap justify-center gap-2">
-              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs">JavaScript (6 años)</span>
-              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs">Node.js (6 años)</span>
-              <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs">TypeScript (5 años)</span>
-              <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs">React (4 años)</span>
-              <span className="bg-yellow-600 text-white px-3 py-1 rounded-full text-xs">Linux (10+ años)</span>
-              <span className="bg-cyan-600 text-white px-3 py-1 rounded-full text-xs">Git (7 años)</span>
+              {copy.skillTags.map(tag => (
+                <span
+                  key={tag.label}
+                  className={`${tag.colorClass} text-white px-3 py-1 rounded-full text-xs`}
+                >
+                  {tag.label}
+                </span>
+              ))}
             </div>
           </div>
         </div>

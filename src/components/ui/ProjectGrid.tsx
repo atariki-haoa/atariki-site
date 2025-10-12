@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ProjectCard from './ProjectCard';
 import { ProjectData } from '../../types/project';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface ProjectGridProps {
   projects: ProjectData[];
@@ -16,6 +17,9 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
   onToggleExpand,
   delay = 0
 }) => {
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
+
   if (projects.length === 0) {
     return (
       <motion.div 
@@ -25,7 +29,9 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
         className="text-center py-12"
       >
         <div className="text-gray-400 text-lg">
-          No se encontraron proyectos con los filtros seleccionados
+          {isSpanish
+            ? 'No se encontraron proyectos con los filtros seleccionados'
+            : 'No projects match the selected filters'}
         </div>
       </motion.div>
     );

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Head from 'next/head';
 import { motion } from 'framer-motion';
 import ProjectsHeader from '../ui/ProjectsHeader';
 import ProjectStats from './ProjectStats';
@@ -15,8 +14,8 @@ interface ProjectsSectionProps {
 
 const ProjectsSection: React.FC<ProjectsSectionProps> = ({ 
   projects,
-  title = "Portfolio de Proyectos",
-  description = "Una colección de proyectos que demuestran mi experiencia en desarrollo full-stack, desde APIs robustas hasta interfaces de usuario modernas."
+  title,
+  description
 }) => {
   const [filteredProjects, setFilteredProjects] = useState<ProjectData[]>(projects);
 

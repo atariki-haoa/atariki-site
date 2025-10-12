@@ -4,6 +4,8 @@ const express = require('express');
 const next = require('next');
 const csurf = require('csurf');
 const cookieParser = require('cookie-parser');
+const { detectLocale } = require('./src/server/detectLocale');
+const localeConfig = require('./src/locales/config.json');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -15,6 +17,48 @@ app.prepare().then(() => {
   // Configurar middleware para parsear cookies
   server.use(cookieParser());
 
+  // Detección de idioma basada en IP y cabeceras
+  server.use(async (req, res, next) => {
+    const cookieName = localeConfig.localeCookieName || 'preferredLocale';
+    const supportedLocales = new Set(localeConfig.supportedLocales || ['es', 'en']);
+    const secureCookie = process.env.NODE_ENV === 'production';
+    const fallbackLocale = localeConfig.defaultLocale || 'es';
+
+    try {
+      const cookieLocale = req.cookies?.[cookieName];
+      let resolvedLocale = supportedLocales.has(cookieLocale) ? cookieLocale : undefined;
+
+      if (!resolvedLocale) {
+        resolvedLocale = await detectLocale(req);
+        if (!supportedLocales.has(resolvedLocale)) {
+          resolvedLocale = fallbackLocale;
+        }
+        res.cookie(cookieName, resolvedLocale, {
+          maxAge: 1000 * 60 * 60 * 24 * 365,
+          sameSite: 'lax',
+          httpOnly: false,
+          secure: secureCookie,
+        });
+      }
+
+      req.preferredLocale = resolvedLocale;
+      res.locals.preferredLocale = resolvedLocale;
+      next();
+    } catch (error) {
+      console.error('[locale] Error al detectar idioma:', error);
+      const resolvedLocale = fallbackLocale;
+      req.preferredLocale = resolvedLocale;
+      res.locals.preferredLocale = resolvedLocale;
+      res.cookie(cookieName, resolvedLocale, {
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+      });
+      next();
+    }
+  });
+
   // Configurar middleware CSRF
   const csrfProtection = csurf({
     cookie: {
@@ -22,7 +66,8 @@ app.prepare().then(() => {
       secure: process.env.NODE_ENV === 'production', // Asegúrate de que sea true en producción
       sameSite: 'strict', // Ajusta según tus necesidades
     },
-  });  server.use(csrfProtection);
+  });
+  server.use(csrfProtection);
 
   // Ruta para obtener el token CSRF
   server.get('/api/csrf-token', (req, res) => {
