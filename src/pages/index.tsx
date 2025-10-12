@@ -6,37 +6,39 @@ import { SiTypescript, SiFlutter } from 'react-icons/si';
 import SkillPopup from '../components/ui/SkillPopup';
 import { PersonStructuredData, WebsiteStructuredData } from '../components/ui/StructuredData';
 import Link from 'next/link';
-
-interface Skill {
-  id: number;
-  icon: React.ComponentType;
-  color: string;
-}
+import skillsData from '../data/skills.json';
 
 interface SkillData {
   id: number;
   name: string;
   experience: string;
   description: string;
+  icon: string;
+  color: string;
 }
 
-const skills = [
-  { id: 1, icon: FaReact, color: '#61DAFB' },
-  { id: 2, icon: FaNodeJs, color: '#339933' },
-  { id: 3, icon: FaJs, color: '#F7DF1E' },
-  { id: 4, icon: SiTypescript, color: '#3178C6' },
-  { id: 5, icon: FaPython, color: '#3776AB' },
-  { id: 6, icon: SiFlutter, color: '#02569B' }
-];
+interface Skill {
+  id: number;
+  icon: React.ComponentType<any>;
+  color: string;
+}
 
-const skillsData: SkillData[] = [
-  { id: 3, name: 'JavaScript', experience: '6 años', description: 'Lenguaje de programación utilizado para desarrollo web frontend y backend.' },
-  { id: 4, name: 'TypeScript', experience: '5 años', description: 'Superset de JavaScript que añade tipado estático opcional.' },
-  { id: 2, name: 'NodeJS', experience: '6 años', description: 'Entorno de ejecución para JavaScript en el backend.' },
-  { id: 1, name: 'React JS', experience: '4 años', description: 'Librería de JavaScript para construir interfaces de usuario.' },
-  { id: 6, name: 'Flutter', experience: '3 años', description: 'Framework para construir aplicaciones móviles multiplataforma.' },
-  { id: 5, name: 'Python', experience: '4 años', description: 'Lenguaje de programación de propósito general, usado para scripting y desarrollo backend.' },
-];
+const iconMap: Record<string, React.ComponentType<any>> = {
+  FaReact,
+  FaNodeJs,
+  FaJs,
+  SiTypescript,
+  FaPython,
+  SiFlutter
+};
+
+const getSkillsWithIcons = (): Skill[] => {
+  return skillsData.map(skill => ({
+    id: skill.id,
+    icon: iconMap[skill.icon],
+    color: skill.color
+  }));
+};
 
 const Home: React.FC = () => {
   const [selectedSkill, setSelectedSkill] = useState<SkillData | null>(null);
@@ -137,7 +139,7 @@ const Home: React.FC = () => {
             <div className="mb-16">
               <p className="text-gray-500 mb-4">Tecnologías principales:</p>
               <div className="flex flex-wrap justify-center items-center gap-6">
-                {skills.map((s, index) => {
+                {getSkillsWithIcons().map((s, index) => {
                   const IconComponent = s.icon;
                   return (
                     <div 

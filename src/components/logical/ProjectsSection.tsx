@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import ProjectsHeader from '../ui/ProjectsHeader';
-import ProjectStats from '../logical/ProjectStats';
-import ProjectFilters from '../logical/ProjectFilters';
-import ProjectManager from '../logical/ProjectManager';
+import ProjectStats from './ProjectStats';
+import ProjectFilters from './ProjectFilters';
+import ProjectManager from './ProjectManager';
 import { ProjectData } from '../../types/project';
 
 interface ProjectsSectionProps {
