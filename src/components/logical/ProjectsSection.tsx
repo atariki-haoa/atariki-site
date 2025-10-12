@@ -30,7 +30,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       transition={{ duration: 0.6 }}
       className="max-w-7xl mx-auto"
     >
-      <ProjectsHeader title={title} description={description} />
+      <ProjectsHeader title={title || ''} description={description || ''} />
       
       <ProjectStats projects={projects} />
       
