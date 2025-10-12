@@ -6,19 +6,22 @@ interface QuoteFormData {
   email: string;
   budget: string;
   technology: string;
+  timeline: string;
 }
 
 interface QuoteFormProps {
   onSubmit: (data: QuoteFormData) => void;
+  isSubmitting?: boolean;
 }
 
-const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
+const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false }) => {
   const [formData, setFormData] = useState<QuoteFormData>({
     name: '',
     phone: '',
     email: '',
     budget: '',
-    technology: ''
+    technology: '',
+    timeline: ''
   });
 
   const [errors, setErrors] = useState<Partial<QuoteFormData>>({});
@@ -29,9 +32,21 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
   }
 
   const technologyOptions = [
-    { value: 'web', label: 'Aplicación Web' },
-    { value: 'mobile', label: 'Aplicación Móvil' },
-    { value: 'other', label: 'Otro' }
+    { value: 'web_app', label: 'Aplicación Web' },
+    { value: 'integrations', label: 'Integraciones' },
+    { value: 'mobile_app', label: 'Aplicación Móvil' },
+    { value: 'other', label: 'Otros' }
+  ];
+
+  const timelineOptions = [
+    { value: '1', label: '1 mes (express)' },
+    { value: '2', label: '2 meses' },
+    { value: '3', label: '3 meses' },
+    { value: '4', label: '4 meses' },
+    { value: '6', label: '6 meses' },
+    { value: '9', label: '9 meses' },
+    { value: '12', label: '12 meses' },
+    { value: '15', label: 'Más de 12 meses' }
   ];
 
   const validateForm = (): boolean => {
@@ -53,6 +68,10 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
 
     if (!formData.technology) {
       newErrors.technology = 'Debe seleccionar una tecnología';
+    }
+
+    if (!formData.timeline) {
+      newErrors.timeline = 'Debe seleccionar un plazo estimado';
     }
 
     setErrors(newErrors);
@@ -203,11 +222,41 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
             )}
           </div>
 
+          <div>
+            <label htmlFor="timeline" className="block text-sm font-medium text-gray-300 mb-2">
+              Plazo estimado para recibir el proyecto <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="timeline"
+              name="timeline"
+              value={formData.timeline}
+              onChange={handleInputChange}
+              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                errors.timeline ? 'border-red-500' : 'border-gray-600'
+              }`}
+            >
+              <option value="">Selecciona el plazo objetivo</option>
+              {timelineOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {errors.timeline && (
+              <p className="mt-1 text-sm text-red-500">{errors.timeline}</p>
+            )}
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+            disabled={isSubmitting}
+            className={`w-full font-semibold py-4 px-6 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
+              isSubmitting
+                ? 'bg-blue-800 text-gray-300 cursor-not-allowed'
+                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transform hover:scale-105'
+            }`}
           >
-            Solicitar Cotización
+            {isSubmitting ? 'Calculando...' : 'Generar Cotización'}
           </button>
         </form>
       </div>

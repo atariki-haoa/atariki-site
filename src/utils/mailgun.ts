@@ -53,6 +53,11 @@ class MailgunService {
     email: string;
     budget: number;
     technology: string;
+    timelineMonths?: number;
+    recommendedBudgetMin?: number;
+    recommendedBudgetMax?: number;
+    budgetAdequacy?: string;
+    timelinePressure?: string;
   }) {
     const formatCurrency = (amount: number): string => {
       return new Intl.NumberFormat('es-CL', {
@@ -63,10 +68,22 @@ class MailgunService {
     };
 
     const technologyLabels: { [key: string]: string } = {
-      web: 'Aplicación Web',
-      mobile: 'Aplicación Móvil',
-      other: 'Otro'
+      web_app: 'Aplicación Web',
+      integrations: 'Integraciones',
+      mobile_app: 'Aplicación Móvil',
+      other: 'Otros'
     };
+
+    const timelineLabel = quoteData.timelineMonths
+      ? `${quoteData.timelineMonths} mes${quoteData.timelineMonths === 1 ? '' : 'es'}`
+      : 'No especificado';
+
+    const recommendedRange =
+      quoteData.recommendedBudgetMin && quoteData.recommendedBudgetMax
+        ? `${formatCurrency(quoteData.recommendedBudgetMin)} - ${formatCurrency(
+            quoteData.recommendedBudgetMax
+          )}`
+        : 'No calculado';
 
     const subject = `Nueva solicitud de cotización - ${quoteData.name}`;
     
@@ -78,6 +95,10 @@ Email: ${quoteData.email}
 Teléfono: ${quoteData.phone || 'No proporcionado'}
 Presupuesto: ${formatCurrency(quoteData.budget)}
 Tecnología: ${technologyLabels[quoteData.technology] || quoteData.technology}
+Plazo solicitado: ${timelineLabel}
+Rango estimado: ${recommendedRange}
+Presión de plazo: ${quoteData.timelinePressure || 'No evaluado'}
+Adecuación presupuestaria: ${quoteData.budgetAdequacy || 'No evaluada'}
 
 Fecha: ${new Date().toLocaleString('es-CL')}
     `;
@@ -95,6 +116,10 @@ Fecha: ${new Date().toLocaleString('es-CL')}
             <p style="margin: 10px 0;"><strong>Teléfono:</strong> ${quoteData.phone || 'No proporcionado'}</p>
             <p style="margin: 10px 0;"><strong>Presupuesto:</strong> <span style="color: #28a745; font-weight: bold;">${formatCurrency(quoteData.budget)}</span></p>
             <p style="margin: 10px 0;"><strong>Tecnología:</strong> ${technologyLabels[quoteData.technology] || quoteData.technology}</p>
+            <p style="margin: 10px 0;"><strong>Plazo solicitado:</strong> ${timelineLabel}</p>
+            <p style="margin: 10px 0;"><strong>Rango estimado:</strong> ${recommendedRange}</p>
+            <p style="margin: 10px 0;"><strong>Presión de plazo:</strong> ${quoteData.timelinePressure || 'No evaluado'}</p>
+            <p style="margin: 10px 0;"><strong>Adecuación presupuestaria:</strong> ${quoteData.budgetAdequacy || 'No evaluada'}</p>
           </div>
           
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
