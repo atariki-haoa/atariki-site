@@ -14,15 +14,18 @@ export const useProjects = (initialProjects: ProjectData[]) => {
     );
   }, []);
 
-  const filterOptions: FilterOptions = useMemo(() => ({
-    categories: ['all', ...Array.from(new Set(initialProjects.map(p => p.category)))],
-    statuses: ['all', ...Array.from(new Set(initialProjects.map(p => p.status)))]
-  }), [initialProjects]);
+  const filterOptions: FilterOptions = useMemo(
+    () => ({
+      categories: ['all', ...Array.from(new Set(initialProjects.map(p => p.categoryKey)))],
+      statuses: ['all', ...Array.from(new Set(initialProjects.map(p => p.statusKey)))]
+    }),
+    [initialProjects]
+  );
 
   const filteredProjects = useMemo(() => {
     const filtered = initialProjects.filter(project => {
-      const matchesCategory = selectedCategory === 'all' || project.category === selectedCategory;
-      const matchesStatus = selectedStatus === 'all' || project.status === selectedStatus;
+      const matchesCategory = selectedCategory === 'all' || project.categoryKey === selectedCategory;
+      const matchesStatus = selectedStatus === 'all' || project.statusKey === selectedStatus;
       return matchesCategory && matchesStatus;
     });
 
@@ -33,12 +36,15 @@ export const useProjects = (initialProjects: ProjectData[]) => {
     });
   }, [initialProjects, selectedCategory, selectedStatus]);
 
-  const stats: ProjectStats = useMemo(() => ({
-    total: initialProjects.length,
-    completed: initialProjects.filter(p => p.status === 'Completado').length,
-    active: initialProjects.filter(p => p.status === 'En desarrollo').length,
-    featured: initialProjects.filter(p => p.featured).length
-  }), [initialProjects]);
+  const stats: ProjectStats = useMemo(
+    () => ({
+      total: initialProjects.length,
+      completed: initialProjects.filter(p => p.statusKey === 'completed').length,
+      active: initialProjects.filter(p => p.statusKey === 'in_progress').length,
+      featured: initialProjects.filter(p => p.featured).length
+    }),
+    [initialProjects]
+  );
 
   return {
     expandedCards,

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Layout from '../components/functional/Layout';
 import { FaReact, FaNodeJs, FaJs, FaPython } from 'react-icons/fa';
 import { SiTypescript } from 'react-icons/si';
+import { useLanguage } from '../context/LanguageContext';
 
 const skills = [
   { icon: FaReact, color: '#61DAFB' },
@@ -12,8 +13,25 @@ const skills = [
 ];
 
 const SkillsPage: React.FC = () => {
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
+
+  const meta = useMemo(
+    () =>
+      isSpanish
+        ? {
+            title: 'Habilidades - Ariel Lobos Haoa',
+            description: 'Principales tecnologías y herramientas utilizadas por Ariel Lobos Haoa.',
+          }
+        : {
+            title: 'Skills - Ariel Lobos Haoa',
+            description: 'Core technologies and tools used by Ariel Lobos Haoa.',
+          },
+    [isSpanish]
+  );
+
   return (
-    <Layout title="Habilidades - Ariel Lobos Haoa" description="Habilidades - Ariel Lobos Haoa">
+    <Layout title={meta.title} description={meta.description} canonicalUrl="/skills">
       <div className="skills-container flex flex-wrap justify-center items-center py-8">
         {skills.map((skill, index) => {
           const IconComponent = skill.icon;

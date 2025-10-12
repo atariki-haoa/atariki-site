@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import MailgunService from '../../utils/mailgun';
 import { calculateQuoteEstimate } from '../../utils/quoteCalculator';
+import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../types/locale';
 
 interface QuoteFormData {
   name: string;
@@ -9,6 +10,7 @@ interface QuoteFormData {
   budget: string;
   technology: string;
   timeline: string;
+  locale?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,33 +18,65 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  let normalizedLocale: Locale = DEFAULT_LOCALE;
+  let messages = {
+    missingFields: 'Required fields are missing',
+    invalidEmail: 'Invalid email format',
+    invalidBudget: 'Budget must be a valid number',
+    invalidTimeline: 'Timeline must be a valid month count',
+    success: 'Estimate received successfully',
+    failure: 'Unable to generate the estimate.',
+    serverError: 'Internal server error',
+  };
+
   try {
-    const { name, phone, email, budget, technology, timeline }: QuoteFormData = req.body;
+    const { name, phone, email, budget, technology, timeline, locale }: QuoteFormData = req.body;
+    normalizedLocale = isSupportedLocale(locale) ? locale : DEFAULT_LOCALE;
+
+    messages = normalizedLocale === 'es'
+      ? {
+          missingFields: 'Faltan campos obligatorios',
+          invalidEmail: 'Formato de email inválido',
+          invalidBudget: 'El presupuesto debe ser un número válido',
+          invalidTimeline: 'El plazo estimado debe ser un número de meses válido',
+          success: 'Cotización recibida exitosamente',
+          failure: 'No se pudo generar la cotización.',
+          serverError: 'Error interno del servidor',
+        }
+      : {
+          missingFields: 'Required fields are missing',
+          invalidEmail: 'Invalid email format',
+          invalidBudget: 'Budget must be a valid number',
+          invalidTimeline: 'Timeline must be a valid month count',
+          success: 'Estimate received successfully',
+          failure: 'Unable to generate the estimate.',
+          serverError: 'Internal server error',
+        };
 
     if (!name || !email || !budget || !technology || !timeline) {
-      return res.status(400).json({ 
-        message: 'Faltan campos obligatorios' 
+      return res.status(400).json({
+        message: messages.missingFields,
       });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        message: 'Formato de email inválido' 
+      return res.status(400).json({
+        message: messages.invalidEmail,
       });
     }
 
     const budgetNumber = Number(budget);
     if (Number.isNaN(budgetNumber) || budgetNumber <= 0) {
       return res.status(400).json({
-        message: 'El presupuesto debe ser un número válido',
+        message: messages.invalidBudget,
       });
     }
 
     const timelineNumber = Number(timeline);
     if (Number.isNaN(timelineNumber) || timelineNumber < 1) {
       return res.status(400).json({
-        message: 'El plazo estimado debe ser un número de meses válido',
+        message: messages.invalidTimeline,
       });
     }
 
@@ -51,11 +85,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ? (technology as typeof allowedTechnologies[number])
       : 'other';
 
-    const estimate = calculateQuoteEstimate({
-      budget: budgetNumber,
-      technology: normalizedTechnology,
-      timelineMonths: timelineNumber,
-    });
+    const estimate = calculateQuoteEstimate(
+      {
+        budget: budgetNumber,
+        technology: normalizedTechnology,
+        timelineMonths: timelineNumber,
+      },
+      normalizedLocale
+    );
 
     const quoteData = {
       name: name.trim(),
@@ -65,7 +102,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       technology: normalizedTechnology,
       timelineMonths: timelineNumber,
       timestamp: new Date().toISOString(),
-      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+      locale: normalizedLocale,
     };
 
     console.log('Nueva solicitud de cotización:', quoteData);
@@ -94,15 +132,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     res.status(200).json({ 
-      message: 'Cotización recibida exitosamente',
+      message: messages.success,
       quoteId: `quote_${Date.now()}`,
       estimate
     });
 
   } catch (error) {
     console.error('Error processing quote request:', error);
-    res.status(500).json({ 
-      message: 'Error interno del servidor' 
+    res.status(500).json({
+      message: messages.serverError,
     });
   }
 }

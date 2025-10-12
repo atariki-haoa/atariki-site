@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
-interface QuoteFormData {
+export interface QuoteFormData {
   name: string;
   phone: string;
   email: string;
@@ -21,105 +22,207 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
     email: '',
     budget: '',
     technology: '',
-    timeline: ''
+    timeline: '',
   });
 
   const [errors, setErrors] = useState<Partial<QuoteFormData>>({});
 
-  const budgetOptions = [];
-  for (let i = 1000000; i <= 10000000; i += 1000000) {
-    budgetOptions.push(i);
-  }
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
 
-  const technologyOptions = [
-    { value: 'web_app', label: 'Aplicación Web' },
-    { value: 'integrations', label: 'Integraciones' },
-    { value: 'mobile_app', label: 'Aplicación Móvil' },
-    { value: 'other', label: 'Otros' }
-  ];
+  const currencyFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat(isSpanish ? 'es-CL' : 'en-US', {
+        style: 'currency',
+        currency: 'CLP',
+        minimumFractionDigits: 0,
+      }),
+    [isSpanish]
+  );
 
-  const timelineOptions = [
-    { value: '1', label: '1 mes (express)' },
-    { value: '2', label: '2 meses' },
-    { value: '3', label: '3 meses' },
-    { value: '4', label: '4 meses' },
-    { value: '6', label: '6 meses' },
-    { value: '9', label: '9 meses' },
-    { value: '12', label: '12 meses' },
-    { value: '15', label: 'Más de 12 meses' }
-  ];
+  const copy = useMemo(
+    () =>
+      isSpanish
+        ? {
+            title: 'Solicitar Cotización',
+            labels: {
+              name: 'Nombre',
+              phone: 'Teléfono',
+              email: 'Correo Electrónico',
+              budget: 'Rango de Presupuesto',
+              technology: 'Tipo de Tecnología',
+              timeline: 'Plazo estimado para recibir el proyecto',
+            },
+            placeholders: {
+              name: 'Ingresa tu nombre completo',
+              phone: '+56 9 1234 5678',
+              email: 'tu@email.com',
+              budget: 'Selecciona un rango de presupuesto',
+              technology: 'Selecciona el tipo de tecnología',
+              timeline: 'Selecciona el plazo objetivo',
+            },
+            errors: {
+              name: 'El nombre es obligatorio',
+              emailRequired: 'El correo electrónico es obligatorio',
+              emailInvalid: 'El formato del correo no es válido',
+              budget: 'Debe seleccionar un rango de presupuesto',
+              technology: 'Debe seleccionar una tecnología',
+              timeline: 'Debe seleccionar un plazo estimado',
+            },
+            submit: {
+              idle: 'Generar Cotización',
+              loading: 'Calculando...',
+            },
+          }
+        : {
+            title: 'Request an Estimate',
+            labels: {
+              name: 'Name',
+              phone: 'Phone',
+              email: 'Email',
+              budget: 'Budget Range',
+              technology: 'Technology Type',
+              timeline: 'Desired delivery timeline',
+            },
+            placeholders: {
+              name: 'Enter your full name',
+              phone: '+56 9 1234 5678',
+              email: 'your@email.com',
+              budget: 'Select a budget range',
+              technology: 'Select the technology focus',
+              timeline: 'Select your target timeline',
+            },
+            errors: {
+              name: 'Name is required',
+              emailRequired: 'Email is required',
+              emailInvalid: 'Invalid email format',
+              budget: 'Please select a budget range',
+              technology: 'Please select a technology type',
+              timeline: 'Please select an estimated timeline',
+            },
+            submit: {
+              idle: 'Generate Estimate',
+              loading: 'Calculating...',
+            },
+          },
+    [isSpanish]
+  );
+
+  const budgetOptions = useMemo(() => {
+    const options: number[] = [];
+    for (let amount = 1_000_000; amount <= 10_000_000; amount += 1_000_000) {
+      options.push(amount);
+    }
+    return options;
+  }, []);
+
+  const technologyOptions = useMemo(
+    () =>
+      isSpanish
+        ? [
+            { value: 'web_app', label: 'Aplicación Web' },
+            { value: 'integrations', label: 'Integraciones' },
+            { value: 'mobile_app', label: 'Aplicación Móvil' },
+            { value: 'other', label: 'Otros' },
+          ]
+        : [
+            { value: 'web_app', label: 'Web Application' },
+            { value: 'integrations', label: 'Integrations' },
+            { value: 'mobile_app', label: 'Mobile Application' },
+            { value: 'other', label: 'Other' },
+          ],
+    [isSpanish]
+  );
+
+  const timelineOptions = useMemo(
+    () =>
+      isSpanish
+        ? [
+            { value: '1', label: '1 mes (express)' },
+            { value: '2', label: '2 meses' },
+            { value: '3', label: '3 meses' },
+            { value: '4', label: '4 meses' },
+            { value: '6', label: '6 meses' },
+            { value: '9', label: '9 meses' },
+            { value: '12', label: '12 meses' },
+            { value: '15', label: 'Más de 12 meses' },
+          ]
+        : [
+            { value: '1', label: '1 month (express)' },
+            { value: '2', label: '2 months' },
+            { value: '3', label: '3 months' },
+            { value: '4', label: '4 months' },
+            { value: '6', label: '6 months' },
+            { value: '9', label: '9 months' },
+            { value: '12', label: '12 months' },
+            { value: '15', label: 'More than 12 months' },
+          ],
+    [isSpanish]
+  );
+
+  const formatCurrency = (amount: number): string => currencyFormatter.format(amount);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<QuoteFormData> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es obligatorio';
+      newErrors.name = copy.errors.name;
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'El correo electrónico es obligatorio';
+      newErrors.email = copy.errors.emailRequired;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'El formato del correo no es válido';
+      newErrors.email = copy.errors.emailInvalid;
     }
 
     if (!formData.budget) {
-      newErrors.budget = 'Debe seleccionar un rango de presupuesto';
+      newErrors.budget = copy.errors.budget;
     }
 
     if (!formData.technology) {
-      newErrors.technology = 'Debe seleccionar una tecnología';
+      newErrors.technology = copy.errors.technology;
     }
 
     if (!formData.timeline) {
-      newErrors.timeline = 'Debe seleccionar un plazo estimado';
+      newErrors.timeline = copy.errors.timeline;
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     if (errors[name as keyof QuoteFormData]) {
       setErrors(prev => ({
         ...prev,
-        [name]: undefined
+        [name]: undefined,
       }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
     if (validateForm()) {
       onSubmit(formData);
     }
   };
 
-  const formatCurrency = (amount: number): string => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
-    }).format(amount);
-  };
-
   return (
     <div className="max-w-2xl mx-auto p-6">
       <div className="bg-gray-800 rounded-3xl shadow-lg p-8 glass">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gradient-blue">
-          Solicitar Cotización
-        </h2>
-        
+        <h2 className="text-3xl font-bold text-center mb-8 text-gradient-blue">{copy.title}</h2>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-              Nombre <span className="text-red-500">*</span>
+              {copy.labels.name} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -130,16 +233,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                 errors.name ? 'border-red-500' : 'border-gray-600'
               }`}
-              placeholder="Ingresa tu nombre completo"
+              placeholder={copy.placeholders.name}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-            )}
+            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
           </div>
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
-              Teléfono
+              {copy.labels.phone}
             </label>
             <input
               type="tel"
@@ -148,13 +249,13 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               value={formData.phone}
               onChange={handleInputChange}
               className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              placeholder="+56 9 1234 5678"
+              placeholder={copy.placeholders.phone}
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              Correo Electrónico <span className="text-red-500">*</span>
+              {copy.labels.email} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -165,16 +266,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
                 errors.email ? 'border-red-500' : 'border-gray-600'
               }`}
-              placeholder="tu@email.com"
+              placeholder={copy.placeholders.email}
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-            )}
+            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
           </div>
 
           <div>
             <label htmlFor="budget" className="block text-sm font-medium text-gray-300 mb-2">
-              Rango de Presupuesto <span className="text-red-500">*</span>
+              {copy.labels.budget} <span className="text-red-500">*</span>
             </label>
             <select
               id="budget"
@@ -185,21 +284,19 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 errors.budget ? 'border-red-500' : 'border-gray-600'
               }`}
             >
-              <option value="">Selecciona un rango de presupuesto</option>
-              {budgetOptions.map((amount) => (
+              <option value="">{copy.placeholders.budget}</option>
+              {budgetOptions.map(amount => (
                 <option key={amount} value={amount}>
                   {formatCurrency(amount)}
                 </option>
               ))}
             </select>
-            {errors.budget && (
-              <p className="mt-1 text-sm text-red-500">{errors.budget}</p>
-            )}
+            {errors.budget && <p className="mt-1 text-sm text-red-500">{errors.budget}</p>}
           </div>
 
           <div>
             <label htmlFor="technology" className="block text-sm font-medium text-gray-300 mb-2">
-              Tipo de Tecnología <span className="text-red-500">*</span>
+              {copy.labels.technology} <span className="text-red-500">*</span>
             </label>
             <select
               id="technology"
@@ -210,21 +307,19 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 errors.technology ? 'border-red-500' : 'border-gray-600'
               }`}
             >
-              <option value="">Selecciona el tipo de tecnología</option>
-              {technologyOptions.map((option) => (
+              <option value="">{copy.placeholders.technology}</option>
+              {technologyOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-            {errors.technology && (
-              <p className="mt-1 text-sm text-red-500">{errors.technology}</p>
-            )}
+            {errors.technology && <p className="mt-1 text-sm text-red-500">{errors.technology}</p>}
           </div>
 
           <div>
             <label htmlFor="timeline" className="block text-sm font-medium text-gray-300 mb-2">
-              Plazo estimado para recibir el proyecto <span className="text-red-500">*</span>
+              {copy.labels.timeline} <span className="text-red-500">*</span>
             </label>
             <select
               id="timeline"
@@ -235,16 +330,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 errors.timeline ? 'border-red-500' : 'border-gray-600'
               }`}
             >
-              <option value="">Selecciona el plazo objetivo</option>
-              {timelineOptions.map((option) => (
+              <option value="">{copy.placeholders.timeline}</option>
+              {timelineOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
             </select>
-            {errors.timeline && (
-              <p className="mt-1 text-sm text-red-500">{errors.timeline}</p>
-            )}
+            {errors.timeline && <p className="mt-1 text-sm text-red-500">{errors.timeline}</p>}
           </div>
 
           <button
@@ -256,7 +349,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transform hover:scale-105'
             }`}
           >
-            {isSubmitting ? 'Calculando...' : 'Generar Cotización'}
+            {isSubmitting ? copy.submit.loading : copy.submit.idle}
           </button>
         </form>
       </div>
