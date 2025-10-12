@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaGithub, FaLinkedin, FaHome, FaUser, FaProjectDiagram, FaEnvelope, FaCalculator, FaFileInvoiceDollar, FaDollarSign, FaChartLine } from 'react-icons/fa';
-import ReactTooltip from 'react-tooltip';
 
 const Header: React.FC = () => {
   return (
@@ -29,7 +28,6 @@ const Header: React.FC = () => {
           <FaLinkedin className="text-2xl" />
         </Link>
       </nav>
-      <ReactTooltip />
     </header>
   );
 };
