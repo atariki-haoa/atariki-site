@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import QuoteForm, { type QuoteFormData } from '../ui/QuoteForm';
 import { useLanguage } from '../../context/LanguageContext';
 import type { QuoteEstimate } from '../../utils/quoteCalculator';
@@ -11,6 +11,7 @@ const QuoteManager: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [quoteResult, setQuoteResult] = useState<QuoteEstimate | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   const currencyFormatter = useMemo(
     () =>
@@ -104,6 +105,15 @@ const QuoteManager: React.FC = () => {
     return `${weekText} (~${monthText})`;
   };
 
+  useEffect(() => {
+    const fetchCsrfToken = async () => {
+      const response = await fetch('/api/csrf');
+      const data = await response.json();
+      setCsrfToken(data.csrfToken);
+    };
+    fetchCsrfToken();
+  }, []);
+
   const handleSubmit = async (data: QuoteFormData) => {
     setIsSubmitting(true);
     setSubmitStatus('idle');
@@ -115,6 +125,7 @@ const QuoteManager: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken || '',
         },
         body: JSON.stringify({ ...data, locale }),
       });

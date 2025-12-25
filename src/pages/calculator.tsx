@@ -41,7 +41,7 @@ const CalculatorPage: React.FC = () => {
       keywords={copy.keywords}
     >
       <div className="min-h-screen py-12">
-        <div className="container mx-auto px-4">
+        <div className="max-w-screen-2xl mx-auto px-4">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-gradient-blue mb-6 animate-fadeInDown">
               {copy.heading}
