@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const next = require('next');
-const csurf = require('csurf');
+const csrf = require('csrf');
 const cookieParser = require('cookie-parser');
 const { detectLocale } = require('./src/server/detectLocale');
 const localeConfig = require('./src/locales/config.json');
@@ -59,19 +59,44 @@ app.prepare().then(() => {
     }
   });
 
-  // Configurar middleware CSRF
-  const csrfProtection = csurf({
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Asegúrate de que sea true en producción
-      sameSite: 'strict', // Ajusta según tus necesidades
-    },
+  // Configurar CSRF
+  const csrfProtection = csrf();
+  const csrfSecret = process.env.CSRF_SECRET || csrfProtection.secretSync();
+
+  // Middleware para generar y validar tokens CSRF
+  server.use((req, res, next) => {
+    let secret = req.cookies?._csrf;
+    if (!secret) {
+      secret = csrfSecret;
+      res.cookie('_csrf', secret, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+      });
+    }
+    req.csrfToken = () => csrfProtection.create(secret);
+    next();
   });
-  server.use(csrfProtection);
+
+  // Middleware de validación CSRF para rutas POST/PUT/DELETE
+  server.use((req, res, next) => {
+    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+      const secret = req.cookies?._csrf || csrfSecret;
+      const token = req.headers['csrf-token'] || req.headers['x-csrf-token'] || req.body?._csrf;
+      
+      if (!secret || !token || !csrfProtection.verify(secret, token)) {
+        return res.status(403).json({ error: 'Invalid CSRF token' });
+      }
+    }
+    next();
+  });
 
   // Ruta para obtener el token CSRF
-  server.get('/api/csrf-token', (req, res) => {
-    res.json({ csrfToken: req.csrfToken() });
+  server.get('/api/csrf', (req, res) => {
+    const secret = req.cookies?._csrf || csrfSecret;
+    const token = csrfProtection.create(secret);
+    res.json({ csrfToken: token });
   });
 
   // Manejar todas las demás rutas con Next.js
