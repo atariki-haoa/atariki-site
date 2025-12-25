@@ -34,7 +34,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
     () =>
       new Intl.NumberFormat(isSpanish ? 'es-CL' : 'en-US', {
         style: 'currency',
-        currency: 'CLP',
+        currency: isSpanish ? 'CLP' : 'USD',
         minimumFractionDigits: 0,
       }),
     [isSpanish]
@@ -107,14 +107,22 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
           },
     [isSpanish]
   );
+    const formatCurrency = (amount: number): string => currencyFormatter.format(amount);
+
 
   const budgetOptions = useMemo(() => {
     const options: number[] = [];
-    for (let amount = 1_000_000; amount <= 10_000_000; amount += 1_000_000) {
+    const budgetCLP = 1_000_000;
+    const budgetUSD = 1_000;
+    let budget = budgetCLP;
+    if (!isSpanish) {
+      budget = budgetUSD;
+    }
+    for (let amount = budget; amount <= budget * 10; amount += budget) {
       options.push(amount);
     }
     return options;
-  }, []);
+  }, [isSpanish]);
 
   const technologyOptions = useMemo(
     () =>
@@ -160,7 +168,6 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
     [isSpanish]
   );
 
-  const formatCurrency = (amount: number): string => currencyFormatter.format(amount);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<QuoteFormData> = {};
@@ -273,7 +280,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
 
           <div>
             <label htmlFor="budget" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.budget} <span className="text-red-500">*</span>
+              {copy.labels.budget} ({isSpanish ? 'CLP' : 'USD'}) <span className="text-red-500">*</span>
             </label>
             <select
               id="budget"

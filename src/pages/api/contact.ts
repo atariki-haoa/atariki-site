@@ -3,9 +3,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import rateLimit from 'express-rate-limit';
 import { runMiddleware } from '../../utils/middleware';
-// @ts-ignore
-import csurf from 'csurf';
-// @ts-ignore
+import csrf from 'csrf';
 import cookieParser from 'cookie-parser';
 
 const mailgun = new Mailgun(formData);
@@ -17,14 +15,31 @@ const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 3,
   message: 'Has alcanzado el límite de envíos de correos. Por favor, intenta más tarde.',
+  keyGenerator: (req) => {
+    const forwarded = req.headers['x-forwarded-for'];
+    const ip = typeof forwarded === 'string' 
+      ? forwarded.split(',')[0].trim() 
+      : req.socket?.remoteAddress || 'unknown';
+    return ip;
+    
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-const csrfProtection = csurf({ cookie: true });
+const csrfProtection = new csrf();
+const csrfSecret = process.env.CSRF_SECRET || csrfProtection.secretSync();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await runMiddleware(req, res, cookieParser());
-  await runMiddleware(req, res, csrfProtection);
-  await runMiddleware(req, res, contactLimiter);
+  // await runMiddleware(req, res, contactLimiter);
+
+  const secret = req.cookies?._csrf || csrfSecret;
+  const token = req.headers['csrf-token'] || req.headers['x-csrf-token'] || req.body?._csrf;
+  
+  if (!secret || !token || !csrfProtection.verify(secret, token)) {
+    return res.status(403).json({ error: 'Invalid CSRF token' });
+  }
 
   const { name, message } = req.body;
   const email = 'ariel@atariki.dev';

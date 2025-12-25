@@ -93,11 +93,11 @@ const Header: React.FC = () => {
         <button
           type="button"
           onClick={toggleLocale}
-          className="menu-item text-sm font-semibold px-3 py-1 border border-gray-600 rounded-full hover:bg-gray-700 transition-colors"
+          className="menu-item text-2xl hover:opacity-80 transition-opacity bg-transparent border-none p-0"
           aria-label={labels.language}
           title={labels.language}
         >
-          {isSpanish ? 'EN' : 'ES'}
+          {isSpanish ? '🇪🇸' : '🇬🇧'}
         </button>
       </nav>
     </header>

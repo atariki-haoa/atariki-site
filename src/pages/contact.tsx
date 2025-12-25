@@ -43,7 +43,7 @@ const ContactPage: React.FC = () => {
 
   useEffect(() => {
     const fetchCsrfToken = async () => {
-      const response = await fetch('/api/csrf-token');
+      const response = await fetch('/api/csrf');
       const data = await response.json();
       setCsrfToken(data.csrfToken);
     };
