@@ -43,10 +43,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     }
 
     const cookieLocale = getCookieValue(document.cookie, LOCALE_COOKIE_NAME);
-    if (isSupportedLocale(cookieLocale) && cookieLocale !== locale) {
+    if (isSupportedLocale(cookieLocale) && cookieLocale !== initialLocale) {
       setLocaleState(cookieLocale);
     }
-  }, [locale]);
+  }, [initialLocale]);
 
   const setLocale = useCallback(
     (nextLocale: Locale, options: { persist?: boolean } = {}) => {
