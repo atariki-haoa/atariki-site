@@ -2,6 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import MailgunService from '../../utils/mailgun';
 import { calculateQuoteEstimate } from '../../utils/quoteCalculator';
 import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../types/locale';
+import csrf from 'csrf';
+import cookieParser from 'cookie-parser';
+import { runMiddleware } from '../../utils/middleware';
+
+const csrfProtection = new csrf();
+const csrfSecret = process.env.CSRF_SECRET || csrfProtection.secretSync();
 
 interface QuoteFormData {
   name: string;
@@ -16,6 +22,15 @@ interface QuoteFormData {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  await runMiddleware(req, res, cookieParser());
+
+  const secret = req.cookies?._csrf || csrfSecret;
+  const token = req.headers['csrf-token'] || req.headers['x-csrf-token'] || req.body?._csrf;
+
+  if (!secret || !token || !csrfProtection.verify(secret, token)) {
+    return res.status(403).json({ error: 'Invalid CSRF token' });
   }
 
   let normalizedLocale: Locale = DEFAULT_LOCALE;
