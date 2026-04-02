@@ -1,5 +1,6 @@
 import Mailgun from 'mailgun.js';
 import FormData from 'form-data';
+import { escapeHtml } from './sanitize';
 
 interface EmailData {
   to: string;
@@ -23,7 +24,7 @@ class MailgunService {
     this.domain = domain;
     const mailgun = new Mailgun(FormData);
     this.mg = mailgun.client({
-      username: 'brad@mg.atariki.dev',
+      username: 'api',
       key: apiKey,
     });
   }
@@ -85,6 +86,10 @@ class MailgunService {
           )}`
         : 'No calculado';
 
+    const safeName = escapeHtml(quoteData.name);
+    const safeEmail = escapeHtml(quoteData.email);
+    const safePhone = escapeHtml(quoteData.phone || 'No proporcionado');
+
     const subject = `Nueva solicitud de cotización - ${quoteData.name}`;
     
     const text = `
@@ -111,9 +116,9 @@ Fecha: ${new Date().toLocaleString('es-CL')}
           </h2>
           
           <div style="margin: 20px 0;">
-            <p style="margin: 10px 0;"><strong>Nombre:</strong> ${quoteData.name}</p>
-            <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${quoteData.email}" style="color: #007ACC;">${quoteData.email}</a></p>
-            <p style="margin: 10px 0;"><strong>Teléfono:</strong> ${quoteData.phone || 'No proporcionado'}</p>
+            <p style="margin: 10px 0;"><strong>Nombre:</strong> ${safeName}</p>
+            <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #007ACC;">${safeEmail}</a></p>
+            <p style="margin: 10px 0;"><strong>Teléfono:</strong> ${safePhone}</p>
             <p style="margin: 10px 0;"><strong>Presupuesto:</strong> <span style="color: #28a745; font-weight: bold;">${formatCurrency(quoteData.budget)}</span></p>
             <p style="margin: 10px 0;"><strong>Tecnología:</strong> ${technologyLabels[quoteData.technology] || quoteData.technology}</p>
             <p style="margin: 10px 0;"><strong>Plazo solicitado:</strong> ${timelineLabel}</p>

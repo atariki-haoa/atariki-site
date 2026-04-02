@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import { runMiddleware } from '../../utils/middleware';
 import csrf from 'csrf';
 import cookieParser from 'cookie-parser';
+import { escapeHtml } from '../../utils/sanitize';
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({ 
@@ -32,7 +33,7 @@ const csrfSecret = process.env.CSRF_SECRET || csrfProtection.secretSync();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   await runMiddleware(req, res, cookieParser());
-  // await runMiddleware(req, res, contactLimiter);
+  await runMiddleware(req, res, contactLimiter);
 
   const secret = req.cookies?._csrf || csrfSecret;
   const token = req.headers['csrf-token'] || req.headers['x-csrf-token'] || req.body?._csrf;
@@ -49,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     to: 'ariel@atariki.com', // Cambia esto por tu correo
     subject: `Nuevo mensaje de contacto de ${name}`,
     text: message,
-    html: `<p><strong>De:</strong> ${name} (${email})</p><p>${message}</p>`,
+    html: `<p><strong>De:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p><p>${escapeHtml(message)}</p>`,
   };
 
   try {
