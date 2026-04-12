@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
 import SkillPopup from '../components/ui/SkillPopup';
+import Terminal from '../components/ui/Terminal';
 import { PersonStructuredData, WebsiteStructuredData } from '../components/ui/StructuredData';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
@@ -220,69 +221,77 @@ const Home: React.FC = () => {
           <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
 
-            <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-              <div className="mb-6">
-                <span className="text-blue-400 text-lg font-medium tracking-wide">{heroCopy.greeting}</span>
-              </div>
+            <div className="relative z-10 px-4 max-w-7xl mx-auto w-full">
+              <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                <div className="flex-1 text-center lg:text-left">
+                  <div className="mb-6">
+                    <span className="text-blue-400 text-lg font-medium tracking-wide">{heroCopy.greeting}</span>
+                  </div>
 
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
-                Ariel Lobos
-              </h1>
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+                    Ariel Lobos
+                  </h1>
 
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-4">{heroCopy.role}</h2>
-                <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-                  {isSpanish ? (
-                    <>
-                      Especialista en <span className="text-blue-400 font-semibold">React</span>,{' '}
-                      <span className="text-green-400 font-semibold">Node.js</span> y{' '}
-                      <span className="text-blue-300 font-semibold">TypeScript</span>. Apasionado por crear
-                      soluciones tecnológicas innovadoras y liderar equipos hacia el éxito.
-                    </>
-                  ) : (
-                    <>
-                      Specialist in <span className="text-blue-400 font-semibold">React</span>,{' '}
-                      <span className="text-green-400 font-semibold">Node.js</span>, and{' '}
-                      <span className="text-blue-300 font-semibold">TypeScript</span>. Passionate about building
-                      innovative solutions and leading teams to success.
-                    </>
-                  )}
-                </p>
-              </div>
+                  <div className="mb-8">
+                    <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-300 mb-4">{heroCopy.role}</h2>
+                    <p className="text-lg md:text-xl text-gray-400 max-w-xl leading-relaxed">
+                      {isSpanish ? (
+                        <>
+                          Especialista en <span className="text-blue-400 font-semibold">React</span>,{' '}
+                          <span className="text-green-400 font-semibold">Node.js</span> y{' '}
+                          <span className="text-blue-300 font-semibold">TypeScript</span>. Apasionado por crear
+                          soluciones tecnológicas innovadoras y liderar equipos hacia el éxito.
+                        </>
+                      ) : (
+                        <>
+                          Specialist in <span className="text-blue-400 font-semibold">React</span>,{' '}
+                          <span className="text-green-400 font-semibold">Node.js</span>, and{' '}
+                          <span className="text-blue-300 font-semibold">TypeScript</span>. Passionate about building
+                          innovative solutions and leading teams to success.
+                        </>
+                      )}
+                    </p>
+                  </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                <Link
-                  href="/projects"
-                  className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2"
-                >
-                  <FaRocket className="group-hover:animate-bounce" />
-                  {heroCopy.projectsCta}
-                </Link>
-                <Link
-                  href="/contact"
-                  className="group border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                >
-                  <FaCode className="group-hover:animate-pulse" />
-                  {heroCopy.contactCta}
-                </Link>
-              </div>
-
-              <div className="mb-16">
-                <p className="text-gray-500 mb-4">{heroCopy.techLabel}</p>
-                <div className="flex flex-wrap justify-center items-center gap-6">
-                  {skillsWithIcons.map(({ id, IconComponent, color }) => (
-                    <div
-                      key={id}
-                      onClick={() => handleSkillClick(id)}
-                      className="group cursor-pointer transform transition-all duration-300 hover:scale-110 hover:rotate-6"
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center mb-8">
+                    <Link
+                      href="/projects"
+                      className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2"
                     >
-                      <IconComponent
-                        size={40}
-                        color={color}
-                        className="group-hover:drop-shadow-lg transition-all duration-300"
-                      />
+                      <FaRocket className="group-hover:animate-bounce" />
+                      {heroCopy.projectsCta}
+                    </Link>
+                    <Link
+                      href="/contact"
+                      className="group border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                    >
+                      <FaCode className="group-hover:animate-pulse" />
+                      {heroCopy.contactCta}
+                    </Link>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-500 mb-4">{heroCopy.techLabel}</p>
+                    <div className="flex flex-wrap justify-center lg:justify-start items-center gap-6">
+                      {skillsWithIcons.map(({ id, IconComponent, color }) => (
+                        <div
+                          key={id}
+                          onClick={() => handleSkillClick(id)}
+                          className="group cursor-pointer transform transition-all duration-300 hover:scale-110 hover:rotate-6"
+                        >
+                          <IconComponent
+                            size={40}
+                            color={color}
+                            className="group-hover:drop-shadow-lg transition-all duration-300"
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                </div>
+
+                <div className="w-full lg:w-1/3 flex-shrink-0 flex justify-center lg:justify-end">
+                  <Terminal />
                 </div>
               </div>
             </div>

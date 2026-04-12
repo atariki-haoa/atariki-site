@@ -1,0 +1,84 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git fetch*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout*)",
+      "Bash(git branch*)",
+      "Bash(git stash*)",
+      "Bash(git pull*)",
+      "Bash(git merge*)",
+      "Bash(git push*)",
+      "Bash(npm run*)",
+      "Bash(npm install*)",
+      "Bash(npx*)",
+      "Bash(node*)",
+      "Bash(ls*)",
+      "Bash(pwd)",
+      "Bash(cd*)",
+      "Bash(which*)",
+      "Bash(echo*)",
+      "Bash(wc*)",
+      "Bash(sort*)",
+      "Bash(uniq*)",
+      "Bash(jq*)",
+      "Bash(mkdir*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "mcp__atlassian__*",
+      "mcp__github__*",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Skill(update-config)"
+    ],
+    "deny": [
+      "Bash(rm*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(git branch -D*)",
+      "Bash(sudo*)",
+      "Bash(chmod*)",
+      "Bash(chown*)",
+      "Bash(kill*)",
+      "Bash(pkill*)",
+      "Bash(killall*)",
+      "Bash(dd*)",
+      "Bash(truncate*)",
+      "Bash(shred*)",
+      "Bash(npm uninstall*)",
+      "Bash(apt*)",
+      "Bash(dpkg*)",
+      "Bash(curl*)",
+      "Bash(wget*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /home/atariki/codes/atariki-site/.claude/hooks/check-mv-cp.sh",
+            "statusMessage": "Validando rutas mv/cp..."
+          },
+          {
+            "type": "command",
+            "command": "bash /home/atariki/codes/atariki-site/.claude/hooks/check-git-push.sh",
+            "statusMessage": "Validando rama git push..."
+          }
+        ]
+      }
+    ]
+  }
+}
