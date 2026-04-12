@@ -296,7 +296,7 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
+            <div className="absolute bottom-4 md:bottom-20 left-1/2 transform -translate-x-1/2 z-50">
               <button
                 onClick={handleScrollDown}
                 className="flex flex-col items-center text-gray-400 hover:text-gray-300 transition-colors duration-300 cursor-pointer group bg-transparent border-none p-2"
