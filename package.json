@@ -35,6 +35,7 @@
     "url": "https://atariki.dev"
   },
   "license": "MIT",
+  "packageManager": "pnpm@10.26.2",
   "homepage": "https://atariki.dev",
   "repository": {
     "type": "git",
@@ -79,5 +80,10 @@
     "@types/react-dom": "^18.3.7",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "unrs-resolver"
+    ]
   }
 }
