@@ -28,7 +28,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
         transition={{ duration: 0.6 }}
         className="text-center py-12"
       >
-        <div className="text-gray-400 text-lg">
+        <div className="text-term-muted text-base">
           {isSpanish
             ? 'No se encontraron proyectos con los filtros seleccionados'
             : 'No projects match the selected filters'}

@@ -62,18 +62,37 @@ const Layout: React.FC<LayoutProps> = ({
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex flex-col min-h-screen">
-        <Header />
-        <motion.main
-          className="flex-grow"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          {children}
-        </motion.main>
-        <Footer />
+      <div className="relative flex flex-col min-h-screen bg-term-bg text-term-text overflow-x-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage:
+              'linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+        <div
+          className="fixed -top-52 -left-36 w-[600px] h-[600px] rounded-full pointer-events-none z-0"
+          style={{ background: 'radial-gradient(circle, #3f6fe022, transparent 70%)' }}
+        />
+        <div
+          className="fixed -bottom-64 -right-52 w-[700px] h-[700px] rounded-full pointer-events-none z-0"
+          style={{ background: 'radial-gradient(circle, #a68bfa1a, transparent 70%)' }}
+        />
+
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Header />
+          <motion.main
+            className="flex-grow"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            {children}
+          </motion.main>
+          <Footer />
+        </div>
       </div>
     </>
   );

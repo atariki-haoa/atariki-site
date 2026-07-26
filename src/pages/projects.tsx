@@ -36,8 +36,8 @@ const ProjectsPage: React.FC = () => {
 
   return (
     <Layout title={seoCopy.title} description={seoCopy.description} canonicalUrl="/projects" keywords={seoCopy.keywords}>
-      <div className="min-h-screen flex flex-col bg-transparent text-gray-100">
-        <main className="flex-1 p-4 md:p-8">
+      <div className="min-h-screen flex flex-col bg-transparent text-term-text">
+        <main className="flex-1 max-w-[1180px] w-full mx-auto px-6 py-14">
           <ProjectsSection projects={projects} title={seoCopy.sectionTitle} description={seoCopy.sectionDescription} />
         </main>
       </div>

@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 class MyDocument extends Document {
   render() {
     return (
-      <Html lang="es">
+      <Html lang="en">
         <Head>
           {/* Meta Tags Básicos */}
           <meta charSet="utf-8" />
@@ -26,7 +26,7 @@ class MyDocument extends Document {
           {/* Open Graph / Facebook */}
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="Ariel Atariki Lobos Haoa" />
-          <meta property="og:locale" content="es_ES" />
+          <meta property="og:locale" content="en_US" />
           
           {/* Twitter */}
           <meta name="twitter:card" content="summary_large_image" />
@@ -38,7 +38,7 @@ class MyDocument extends Document {
           
           {/* Fuentes optimizadas */}
           <link
-            href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
           

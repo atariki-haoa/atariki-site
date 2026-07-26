@@ -1,7 +1,8 @@
 {
-  "supportedLocales": ["es", "en"],
-  "defaultLocale": "es",
+  "supportedLocales": ["en"],
+  "defaultLocale": "en",
   "localeCookieName": "preferredLocale",
+  "autoDetectEnabled": false,
   "spanishCountryCodes": [
     "AR",
     "BO",
