@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
+import { FaTimes } from 'react-icons/fa';
 import styles from '../../styles/SkillPopup.module.css';
 import { useLanguage } from '../../context/LanguageContext';
 import type { SkillData } from '../../data/skills';
@@ -57,14 +58,14 @@ const SkillPopup: React.FC<SkillPopupProps> = ({ skill, onClose }) => {
         className={styles.popupContainer}
       >
         <div className={styles.popupContent}>
+          <button onClick={onClose} className={styles.popupCloseButton} aria-label={closeLabel}>
+            <FaTimes size={16} />
+          </button>
           <h3 className={styles.popupTitle}>{skill.name}</h3>
           <p className={styles.popupDescription}>{skill.description}</p>
           <p className={styles.popupExperience}>
             {experienceLabel}: {skill.experience}
           </p>
-          <button onClick={onClose} className={styles.popupButton}>
-            {closeLabel}
-          </button>
         </div>
       </motion.div>
     </>

@@ -154,18 +154,20 @@ const QuoteManager: React.FC = () => {
     if (submitStatus === 'success') {
       return (
         <div className="max-w-2xl mx-auto p-6">
-          <div className="bg-green-800 bg-opacity-50 border border-green-500 rounded-3xl shadow-lg p-8 text-center">
-            <div className="text-green-400 text-6xl mb-4">✓</div>
-            <h3 className="text-2xl font-bold text-green-400 mb-4">{copy.successTitle}</h3>
-            <p className="text-gray-300 mb-6">{copy.successIntro}</p>
+          <div className="bg-term-panel border border-[#4ade8040] rounded-2xl p-8 text-center">
+            <div className="w-12 h-12 rounded-full bg-[#4ade8020] flex items-center justify-center mx-auto mb-4">
+              <svg width="22" height="22" viewBox="0 0 20 20" stroke="#4ade80" strokeWidth={2.2} fill="none">
+                <polyline points="4 10 8 14 16 5" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-term-green mb-1.5">{copy.successTitle}</h3>
+            <p className="text-term-sub text-[13.5px] mb-6">{copy.successIntro}</p>
 
             {quoteResult && (
-              <div className="text-left bg-gray-900/60 border border-green-500/50 rounded-2xl p-6 mb-6">
-                <div className="mb-4">
-                  <h4 className="text-lg font-semibold text-green-300">
-                    {copy.budgetRangeTitle}
-                  </h4>
-                  <p className="text-gray-200 text-sm">
+              <div className="text-left bg-term-panelAlt rounded-xl p-6 mb-6">
+                <div className="mb-4 text-center bg-term-terminal rounded-lg p-4">
+                  <h4 className="text-xs text-term-dim mb-1">{copy.budgetRangeTitle}</h4>
+                  <p className="text-term-green text-lg font-bold">
                     {copy.budgetRangeText(
                       formatCurrency(quoteResult.recommendedBudget.min),
                       formatCurrency(quoteResult.recommendedBudget.max)
@@ -173,62 +175,55 @@ const QuoteManager: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.complexity}</p>
-                    <p className="text-lg font-semibold text-green-300">{quoteResult.complexity}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.complexity}</p>
+                    <p className="text-sm font-semibold text-term-text">{quoteResult.complexity}</p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.recommendedTimeline}</p>
-                    <p className="text-lg font-semibold text-green-300">
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.recommendedTimeline}</p>
+                    <p className="text-sm font-semibold text-term-text">
                       {formatRecommendedTimeline(quoteResult.recommendedTimelineWeeks)}
                     </p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.confidence}</p>
-                    <p className="text-lg font-semibold text-green-300">{quoteResult.confidence}</p>
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.confidence}</p>
+                    <p className="text-sm font-semibold text-term-text">{quoteResult.confidence}</p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.inputBudget}</p>
-                    <p className="text-lg font-semibold text-green-300">
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.inputBudget}</p>
+                    <p className="text-sm font-semibold text-term-text">
                       {formatCurrency(quoteResult.requestedBudget)}
                     </p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.requestedTimeline}</p>
-                    <p className="text-lg font-semibold text-green-300">
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.requestedTimeline}</p>
+                    <p className="text-sm font-semibold text-term-text">
                       {formatTimelineMonths(quoteResult.requestedTimelineMonths)}
                     </p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.timelinePressure}</p>
-                    <p className="text-lg font-semibold text-green-300">
-                      {quoteResult.timelinePressure}
-                    </p>
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.timelinePressure}</p>
+                    <p className="text-sm font-semibold text-term-text">{quoteResult.timelinePressure}</p>
                   </div>
-                  <div className="bg-green-900/30 rounded-xl p-4">
-                    <p className="text-sm text-gray-400">{copy.cards.budgetAdequacy}</p>
-                    <p className="text-lg font-semibold text-green-300">
-                      {quoteResult.budgetAdequacy}
-                    </p>
+                  <div className="bg-term-terminal rounded-lg p-3.5">
+                    <p className="text-xs text-term-dim">{copy.cards.budgetAdequacy}</p>
+                    <p className="text-sm font-semibold text-term-text">{quoteResult.budgetAdequacy}</p>
                   </div>
                 </div>
 
                 <div className="mb-4">
-                  <h4 className="text-lg font-semibold text-green-300 mb-2">{copy.phasesTitle}</h4>
-                  <ul className="space-y-2 text-sm text-gray-200">
+                  <p className="text-[13px] font-semibold text-term-sub mb-2">{copy.phasesTitle}</p>
+                  <ul className="space-y-1.5 text-[12.5px] text-term-sub">
                     {quoteResult.phases.map(phase => (
-                      <li
-                        key={phase.id}
-                        className="flex justify-between bg-gray-800/60 rounded-lg px-3 py-2"
-                      >
+                      <li key={phase.id} className="flex justify-between bg-term-terminal rounded-lg px-3 py-2">
                         <span>{phase.name}</span>
                         <span className="flex flex-col items-end text-right">
                           <span>
                             {Math.round(phase.percentage * 100)}% · {formatCurrency(phase.minAmount)} -{' '}
                             {formatCurrency(phase.maxAmount)}
                           </span>
-                          <span className="text-xs text-gray-400">
+                          <span className="text-[11px] text-term-dim">
                             {copy.phaseAverageLabel}: {formatCurrency(phase.averageAmount)}
                           </span>
                         </span>
@@ -238,8 +233,8 @@ const QuoteManager: React.FC = () => {
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-semibold text-green-300 mb-2">{copy.suggestionsTitle}</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-200 space-y-1">
+                  <p className="text-[13px] font-semibold text-term-sub mb-2">{copy.suggestionsTitle}</p>
+                  <ul className="list-disc list-inside text-[12.5px] text-term-sub space-y-1">
                     {quoteResult.suggestions.map((suggestion, index) => (
                       <li key={`${index}-${suggestion}`}>{suggestion}</li>
                     ))}
@@ -254,7 +249,7 @@ const QuoteManager: React.FC = () => {
                 setQuoteResult(null);
                 setErrorMessage(null);
               }}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-term-panelAlt border border-term-border text-term-text font-semibold py-3 px-6 rounded-lg text-[13px]"
             >
               {copy.resetButton}
             </button>
@@ -266,17 +261,19 @@ const QuoteManager: React.FC = () => {
     if (submitStatus === 'error') {
       return (
         <div className="max-w-2xl mx-auto p-6">
-          <div className="bg-red-800 bg-opacity-50 border border-red-500 rounded-3xl shadow-lg p-8 text-center">
-            <div className="text-red-400 text-6xl mb-4">✗</div>
-            <h3 className="text-2xl font-bold text-red-400 mb-4">{copy.errorTitle}</h3>
-            <p className="text-gray-300 mb-6">{errorMessage || copy.errorFallback}</p>
+          <div className="bg-term-panel border border-[#f8717140] rounded-2xl p-8 text-center">
+            <div className="w-12 h-12 rounded-full bg-[#f8717120] flex items-center justify-center mx-auto mb-4 text-term-red text-2xl">
+              ✗
+            </div>
+            <h3 className="text-xl font-bold text-term-red mb-1.5">{copy.errorTitle}</h3>
+            <p className="text-term-sub text-[13.5px] mb-6">{errorMessage || copy.errorFallback}</p>
             <button
               onClick={() => {
                 setSubmitStatus('idle');
                 setQuoteResult(null);
                 setErrorMessage(null);
               }}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              className="bg-term-panelAlt border border-term-border text-term-text font-semibold py-3 px-6 rounded-lg text-[13px]"
             >
               {copy.retryButton}
             </button>

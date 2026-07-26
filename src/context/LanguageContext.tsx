@@ -70,7 +70,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   );
 
   const toggleLocale = useCallback(() => {
-    const nextLocale = locale === 'es' ? 'en' : 'es';
+    if (SUPPORTED_LOCALES.length < 2) {
+      return;
+    }
+    const currentIndex = SUPPORTED_LOCALES.indexOf(locale);
+    const nextLocale = SUPPORTED_LOCALES[(currentIndex + 1) % SUPPORTED_LOCALES.length];
     setLocale(nextLocale);
   }, [locale, setLocale]);
 

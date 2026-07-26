@@ -40,7 +40,7 @@ const ProjectStats: React.FC<ProjectStatsProps> = ({ projects }) => {
   );
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div className="flex justify-center gap-8 flex-wrap mb-8 p-[18px] bg-term-panel border border-term-border rounded-xl">
       <StatsCard
         value={stats.total}
         label={labels.total}
@@ -56,13 +56,13 @@ const ProjectStats: React.FC<ProjectStatsProps> = ({ projects }) => {
       <StatsCard
         value={stats.active}
         label={labels.active}
-        color="yellow"
+        color="blue"
         delay={0.8}
       />
       <StatsCard
         value={stats.featured}
         label={labels.featured}
-        color="purple"
+        color="amber"
         delay={0.9}
       />
     </div>

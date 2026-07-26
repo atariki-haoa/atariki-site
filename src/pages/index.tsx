@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fa';
 import { SiTypescript, SiFlutter } from 'react-icons/si';
 import SkillPopup from '../components/ui/SkillPopup';
+import Terminal from '../components/ui/Terminal';
 import { PersonStructuredData, WebsiteStructuredData } from '../components/ui/StructuredData';
 import Link from 'next/link';
 import { useLanguage } from '../context/LanguageContext';
@@ -60,19 +61,21 @@ const Home: React.FC = () => {
     () =>
       isSpanish
         ? {
+            badge: 'Disponible para nuevos proyectos',
             greeting: '¡Hola! Soy',
-            role: 'Ingeniero en Computación & Desarrollador Full Stack',
-            projectsCta: 'Ver Mis Proyectos',
+            role: 'Ingeniero en Computación & Full Stack Developer',
+            projectsCta: 'Ver Proyectos',
             contactCta: 'Contactar',
-            techLabel: 'Tecnologías principales:',
+            techLabel: 'Tecnologías principales',
             scrollLabel: 'Desplázate hacia abajo',
           }
         : {
+            badge: 'Available for new projects',
             greeting: "Hi! I'm",
             role: 'Computer Engineer & Full Stack Developer',
-            projectsCta: 'View My Projects',
+            projectsCta: 'View Projects',
             contactCta: 'Get in Touch',
-            techLabel: 'Core technologies:',
+            techLabel: 'Core technologies',
             scrollLabel: 'Scroll down',
           },
     [isSpanish]
@@ -217,110 +220,103 @@ const Home: React.FC = () => {
         ogImage="/og-home.jpg"
       >
         <div className="min-h-screen">
-          <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
-
-            <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-              <div className="mb-6">
-                <span className="text-blue-400 text-lg font-medium tracking-wide">{heroCopy.greeting}</span>
+          <section className="max-w-[1180px] mx-auto px-6 py-16 md:py-20 flex gap-14 items-center flex-wrap">
+            <div className="flex-1 min-w-[340px]">
+              <div className="inline-flex items-center gap-2 text-term-green text-sm font-semibold mb-5 bg-[#4ade8014] border border-[#4ade8030] px-3 py-1.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-term-green" />
+                {heroCopy.badge}
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="text-[clamp(40px,6vw,72px)] font-bold leading-[1.05] mb-5 tracking-tight text-gradient-hero">
                 Ariel Lobos
               </h1>
+              <h2 className="text-[clamp(18px,2.2vw,24px)] font-semibold text-term-sub mb-5">{heroCopy.role}</h2>
+              <p className="text-[17px] leading-relaxed text-term-muted max-w-[520px] mb-8">
+                {isSpanish ? (
+                  <>
+                    Especialista en <span className="text-term-blue font-semibold">React</span>,{' '}
+                    <span className="text-term-green font-semibold">Node.js</span> y{' '}
+                    <span className="text-term-purple font-semibold">TypeScript</span>. Más de 10 años liderando
+                    equipos y construyendo soluciones que conectan negocio y tecnología.
+                  </>
+                ) : (
+                  <>
+                    Specialist in <span className="text-term-blue font-semibold">React</span>,{' '}
+                    <span className="text-term-green font-semibold">Node.js</span>, and{' '}
+                    <span className="text-term-purple font-semibold">TypeScript</span>. 10+ years leading teams
+                    and building solutions that connect business and technology.
+                  </>
+                )}
+              </p>
 
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-semibold text-gray-300 mb-4">{heroCopy.role}</h2>
-                <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-                  {isSpanish ? (
-                    <>
-                      Especialista en <span className="text-blue-400 font-semibold">React</span>,{' '}
-                      <span className="text-green-400 font-semibold">Node.js</span> y{' '}
-                      <span className="text-blue-300 font-semibold">TypeScript</span>. Apasionado por crear
-                      soluciones tecnológicas innovadoras y liderar equipos hacia el éxito.
-                    </>
-                  ) : (
-                    <>
-                      Specialist in <span className="text-blue-400 font-semibold">React</span>,{' '}
-                      <span className="text-green-400 font-semibold">Node.js</span>, and{' '}
-                      <span className="text-blue-300 font-semibold">TypeScript</span>. Passionate about building
-                      innovative solutions and leading teams to success.
-                    </>
-                  )}
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <div className="flex gap-3.5 flex-wrap mb-9">
                 <Link
                   href="/projects"
-                  className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center gap-2"
+                  className="flex items-center gap-2 text-white px-6 py-3.5 rounded-[10px] font-semibold text-[15px]"
+                  style={{ background: 'linear-gradient(120deg,#3f6fe0,#8b6ff0)' }}
                 >
-                  <FaRocket className="group-hover:animate-bounce" />
+                  <FaRocket />
                   {heroCopy.projectsCta}
                 </Link>
                 <Link
                   href="/contact"
-                  className="group border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                  className="flex items-center gap-2 text-term-text border border-[#333a4a] px-6 py-3.5 rounded-[10px] font-semibold text-[15px]"
                 >
-                  <FaCode className="group-hover:animate-pulse" />
+                  <FaCode />
                   {heroCopy.contactCta}
                 </Link>
               </div>
 
-              <div className="mb-16">
-                <p className="text-gray-500 mb-4">{heroCopy.techLabel}</p>
-                <div className="flex flex-wrap justify-center items-center gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-[1.5px] text-term-dim mb-3.5">{heroCopy.techLabel}</p>
+                <div className="flex gap-3.5 flex-wrap">
                   {skillsWithIcons.map(({ id, IconComponent, color }) => (
-                    <div
+                    <button
                       key={id}
                       onClick={() => handleSkillClick(id)}
-                      className="group cursor-pointer transform transition-all duration-300 hover:scale-110 hover:rotate-6"
+                      className="bg-term-panel border border-term-border w-12 h-12 rounded-[10px] flex items-center justify-center"
                     >
-                      <IconComponent
-                        size={40}
-                        color={color}
-                        className="group-hover:drop-shadow-lg transition-all duration-300"
-                      />
-                    </div>
+                      <IconComponent size={24} color={color} />
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
 
-            <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
-              <button
-                onClick={handleScrollDown}
-                className="flex flex-col items-center text-gray-400 hover:text-gray-300 transition-colors duration-300 cursor-pointer group bg-transparent border-none p-2"
-                aria-label={heroCopy.scrollLabel}
-              >
-                <FaArrowDown className="text-xl animate-bounce group-hover:animate-none" />
-              </button>
+            <div className="flex-1 min-w-[360px] max-w-[520px]">
+              <Terminal />
+              <div className="flex items-center justify-center mt-5 text-term-dim text-xs">
+                <button
+                  onClick={handleScrollDown}
+                  aria-label={heroCopy.scrollLabel}
+                  className="bg-transparent border-none p-2 text-term-dim animate-bounce"
+                >
+                  <FaArrowDown className="text-base" />
+                </button>
+              </div>
             </div>
           </section>
 
-          <section id="about-section" className="py-20 px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h3 className="text-3xl font-bold text-gray-200 mb-8">{aboutCopy.title}</h3>
-              <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-                <p className="text-lg text-gray-300 leading-relaxed mb-6">{aboutCopy.intro}</p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                  {aboutCopy.highlights.map(({ title, description, Icon, colorClass }) => (
-                    <div key={title} className="bg-gray-700 rounded-lg p-6">
-                      <Icon className={`${colorClass} text-3xl mx-auto mb-3`} />
-                      <h4 className="text-lg font-semibold text-gray-200 mb-2">{title}</h4>
-                      <p className="text-gray-400 text-sm">{description}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-8">
-                  <Link
-                    href="/about"
-                    className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
-                  >
-                    {aboutCopy.cta}
-                  </Link>
-                </div>
+          <section id="about-section" className="max-w-[900px] mx-auto px-6 py-10 pb-24 text-center">
+            <h3 className="text-[28px] font-bold mb-7">{aboutCopy.title}</h3>
+            <div className="bg-term-panel border border-term-border rounded-2xl p-10">
+              <p className="text-term-sub text-base leading-relaxed mb-8">{aboutCopy.intro}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                {aboutCopy.highlights.map(({ title, description, Icon, colorClass }) => (
+                  <div key={title} className="bg-term-panelAlt rounded-xl p-5">
+                    <Icon className={`${colorClass} text-2xl mx-auto mb-2.5`} />
+                    <h4 className="text-[15px] font-semibold mb-1">{title}</h4>
+                    <p className="text-term-dim text-[13px]">{description}</p>
+                  </div>
+                ))}
               </div>
+              <Link
+                href="/about"
+                className="inline-block text-white px-[26px] py-3 rounded-[10px] font-semibold text-sm"
+                style={{ background: 'linear-gradient(120deg,#8b6ff0,#3f6fe0)' }}
+              >
+                {aboutCopy.cta}
+              </Link>
             </div>
           </section>
 

@@ -23,13 +23,14 @@ app.prepare().then(() => {
     const supportedLocales = new Set(localeConfig.supportedLocales || ['es', 'en']);
     const secureCookie = process.env.NODE_ENV === 'production';
     const fallbackLocale = localeConfig.defaultLocale || 'es';
+    const autoDetectEnabled = localeConfig.autoDetectEnabled !== false;
 
     try {
       const cookieLocale = req.cookies?.[cookieName];
       let resolvedLocale = supportedLocales.has(cookieLocale) ? cookieLocale : undefined;
 
       if (!resolvedLocale) {
-        resolvedLocale = await detectLocale(req);
+        resolvedLocale = autoDetectEnabled ? await detectLocale(req) : fallbackLocale;
         if (!supportedLocales.has(resolvedLocale)) {
           resolvedLocale = fallbackLocale;
         }

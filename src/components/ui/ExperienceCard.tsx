@@ -1,15 +1,6 @@
-import React, { useMemo } from 'react';
-import {
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaTrophy,
-  FaRocket,
-  FaUsers,
-  FaCode,
-  FaChevronDown,
-} from 'react-icons/fa';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '../../context/LanguageContext';
+import { FaChevronDown } from 'react-icons/fa';
 
 interface ExperienceCardData {
   id: number;
@@ -20,15 +11,11 @@ interface ExperienceCardData {
   description: string;
   achievements: string[];
   technologies: string[];
-  metrics?: string[];
 }
 
 interface ExperienceCardProps {
   experience: ExperienceCardData;
   index: number;
-  isLast: boolean;
-  onNext: (index: number) => void;
-  isLeft?: boolean;
   isExpanded?: boolean;
   onToggleExpand?: (index: number) => void;
 }
@@ -36,35 +23,9 @@ interface ExperienceCardProps {
 const ExperienceCard: React.FC<ExperienceCardProps> = ({
   experience,
   index,
-  isLast,
-  onNext,
-  isLeft = false,
   isExpanded = false,
   onToggleExpand,
 }) => {
-  const { locale } = useLanguage();
-  const isSpanish = locale === 'es';
-
-  const copy = useMemo(
-    () =>
-      isSpanish
-        ? {
-            achievements: 'Logros Principales',
-            metrics: 'Métricas',
-            technologies: 'Tecnologías',
-            aboutButton: 'Ver sección Sobre mí',
-            nextButton: 'Ver siguiente experiencia',
-          }
-        : {
-            achievements: 'Key Achievements',
-            metrics: 'Metrics',
-            technologies: 'Technologies',
-            aboutButton: 'Go to About section',
-            nextButton: 'See next experience',
-          },
-    [isSpanish]
-  );
-
   const toggleExpanded = () => {
     if (onToggleExpand) {
       onToggleExpand(index);
@@ -72,138 +33,61 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({
   };
 
   return (
-    <div className={`relative mb-8 ${isLeft ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'} md:w-1/2`}>
-      {/* Timeline Dot */}
-      <div
-        className={`absolute w-4 h-4 bg-blue-500 rounded-full border-2 border-gray-900 z-10 ${
-          isLeft
-            ? 'top-6 left-6 md:top-1/2 md:right-0 md:left-auto md:transform md:-translate-y-1/2 md:translate-x-1/2'
-            : 'top-6 left-6 md:top-1/2 md:left-0 md:transform md:-translate-y-1/2 md:-translate-x-1/2'
-        }`}
-      ></div>
-
-      {/* Card Container with Motion */}
-      <motion.div
-        className="ml-12 md:ml-0 bg-gray-800 rounded-xl shadow-xl hover:shadow-blue-500/10 transition-all duration-300"
-        layout
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+    <div className="bg-term-panel border border-term-border rounded-xl overflow-hidden">
+      <button
+        onClick={toggleExpanded}
+        className="w-full bg-transparent border-none px-5 py-[18px] flex justify-between items-center cursor-pointer text-left font-mono text-term-text"
       >
-        {/* Compact Header - Always Visible */}
-        <div className="p-4 cursor-pointer" onClick={toggleExpanded}>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-gray-200 mb-1">{experience.position}</h3>
-              <h4 className="text-base text-blue-400 font-semibold">{experience.company}</h4>
-            </div>
-            <div className="flex items-center gap-4 mt-2 md:mt-0">
-              <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                <FaCalendarAlt className="inline mr-1" />
-                {experience.period}
-              </span>
-              <motion.div
-                className="text-blue-400"
-                animate={{ rotate: isExpanded ? 180 : 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
-              >
-                <FaChevronDown size={16} />
-              </motion.div>
-            </div>
-          </div>
+        <div>
+          <h3 className="m-0 mb-[3px] text-base font-bold text-term-text">{experience.position}</h3>
+          <p className="m-0 text-[13.5px] font-semibold text-term-blue">{experience.company}</p>
         </div>
+        <div className="flex items-center gap-3.5">
+          <span className="text-xs text-term-dim">{experience.period}</span>
+          <motion.span
+            className="text-term-text"
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+          >
+            <FaChevronDown size={16} />
+          </motion.span>
+        </div>
+      </button>
 
-        {/* Expanded Content with Animation */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              className="px-4 pb-4 border-t border-gray-700"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              style={{ overflow: 'hidden' }}
-            >
-              {/* Location */}
-              <div className="pt-4 mb-4">
-                <p className="text-gray-400 flex items-center text-sm">
-                  <FaMapMarkerAlt className="mr-1" />
-                  {experience.location}
-                </p>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-300 mb-4 leading-relaxed text-sm">{experience.description}</p>
-
-              {/* Achievements */}
-              <div className="mb-4">
-                <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                  <FaTrophy className="mr-1 text-yellow-500" size={12} />
-                  {copy.achievements}
-                </h5>
-                <ul className="space-y-1">
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+            className="border-t border-term-border"
+          >
+            <div className="px-5 pb-5">
+              <p className="text-term-dim text-[12.5px] mt-3.5 mb-2.5">{experience.location}</p>
+              <p className="text-term-sub text-sm leading-relaxed mb-3.5">{experience.description}</p>
+              {experience.achievements.length > 0 && (
+                <ul className="mb-3.5 pl-[18px] text-term-sub text-[13.5px] leading-[1.9]">
                   {experience.achievements.slice(0, 3).map((achievement, i) => (
-                    <li key={i} className="text-gray-300 flex items-start text-xs">
-                      <FaRocket className="mr-2 mt-0.5 text-blue-400 flex-shrink-0" size={10} />
-                      {achievement}
-                    </li>
+                    <li key={i}>{achievement}</li>
                   ))}
                 </ul>
-              </div>
-
-              {/* Metrics */}
-              {experience.metrics && (
-                <div className="mb-4">
-                  <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                    <FaUsers className="mr-1 text-green-500" size={12} />
-                    {copy.metrics}
-                  </h5>
-                  <div className="grid grid-cols-3 gap-2">
-                    {experience.metrics.map((metric, i) => (
-                      <div key={i} className="bg-gray-700 rounded-md p-2 text-center">
-                        <span className="text-green-400 font-semibold text-xs break-words leading-tight">
-                          {metric}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               )}
-
-              {/* Technologies */}
-              <div className="mb-4">
-                <h5 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                  <FaCode className="mr-1 text-purple-500" size={12} />
-                  {copy.technologies}
-                </h5>
-                <div className="flex flex-wrap gap-1">
-                  {experience.technologies.slice(0, 6).map((tech, i) => (
-                    <span
-                      key={i}
-                      className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs hover:bg-purple-600 hover:text-white transition-colors duration-200"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-1.5">
+                {experience.technologies.map((tech, i) => (
+                  <span
+                    key={i}
+                    className="bg-term-panelAlt text-term-sub text-[11.5px] px-2.5 py-1 rounded-full"
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
-
-              {/* Next Button */}
-              <div className="flex justify-center pt-3">
-                <button
-                  onClick={event => {
-                    event.stopPropagation();
-                    onNext(index);
-                  }}
-                  className="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-full shadow-md transition-all duration-300 hover:scale-110 group"
-                  aria-label={isLast ? copy.aboutButton : copy.nextButton}
-                  title={isLast ? copy.aboutButton : copy.nextButton}
-                >
-                  <FaChevronDown size={12} className="group-hover:animate-bounce" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
