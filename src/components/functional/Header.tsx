@@ -1,8 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
-  FaGithub,
-  FaLinkedin,
   FaHome,
   FaUser,
   FaProjectDiagram,
@@ -12,7 +11,8 @@ import {
 import { useLanguage } from '../../context/LanguageContext';
 
 const Header: React.FC = () => {
-  const { locale, toggleLocale } = useLanguage();
+  const { locale, toggleLocale, availableLocales } = useLanguage();
+  const router = useRouter();
   const isSpanish = locale === 'es';
 
   const labels = isSpanish
@@ -24,82 +24,90 @@ const Header: React.FC = () => {
         contact: 'Contacto',
         github: 'GitHub',
         linkedin: 'LinkedIn',
-        language: 'Idioma',
+        language: 'Cambiar idioma',
       }
     : {
         home: 'Home',
         about: 'About',
         projects: 'Projects',
-        calculator: 'Estimator',
+        calculator: 'Quote',
         contact: 'Contact',
         github: 'GitHub',
         linkedin: 'LinkedIn',
-        language: 'Language',
+        language: 'Switch language',
       };
 
+  const navItems = [
+    { href: '/', label: labels.home, Icon: FaHome },
+    { href: '/about', label: labels.about, Icon: FaUser },
+    { href: '/projects', label: labels.projects, Icon: FaProjectDiagram },
+    { href: '/calculator', label: labels.calculator, Icon: FaCalculator },
+    { href: '/contact', label: labels.contact, Icon: FaEnvelope },
+  ];
+
   return (
-    <header className="bg-gray-800 text-gray-100 p-4">
-      <nav className="flex justify-center space-x-4">
-        <Link href="/" className="menu-item" aria-label={labels.home} title={labels.home}>
-          <FaHome className="text-2xl" />
-        </Link>
-        <Link href="/about" className="menu-item" aria-label={labels.about} title={labels.about}>
-          <FaUser className="text-2xl" />
-        </Link>
+    <header className="sticky top-0 z-50 bg-[#0d0f15dd] backdrop-blur-md border-b border-term-border">
+      <div className="max-w-[1180px] mx-auto px-6 h-16 flex items-center justify-between gap-3">
         <Link
-          href="/projects"
-          className="menu-item"
-          aria-label={labels.projects}
-          title={labels.projects}
+          href="/"
+          className="flex items-center text-term-text text-[15px] font-semibold tracking-tight"
         >
-          <FaProjectDiagram className="text-2xl" />
+          ariel<span className="text-term-green">@</span>atariki
+          <span className="text-term-dim">:~$</span>
         </Link>
-        <Link
-          href="/calculator"
-          className="menu-item"
-          aria-label={labels.calculator}
-          title={labels.calculator}
-        >
-          <FaCalculator className="text-2xl" />
-        </Link>
-        <Link
-          href="/contact"
-          className="menu-item"
-          aria-label={labels.contact}
-          title={labels.contact}
-        >
-          <FaEnvelope className="text-2xl" />
-        </Link>
-        <Link
-          href="https://github.com/atariki-haoa"
-          className="menu-item"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={labels.github}
-          title={labels.github}
-        >
-          <FaGithub className="text-2xl" />
-        </Link>
-        <Link
-          href="https://www.linkedin.com/in/arieloboshaoa/"
-          className="menu-item"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={labels.linkedin}
-          title={labels.linkedin}
-        >
-          <FaLinkedin className="text-2xl" />
-        </Link>
-        <button
-          type="button"
-          onClick={toggleLocale}
-          className="menu-item text-2xl hover:opacity-80 transition-opacity bg-transparent border-none p-0"
-          aria-label={labels.language}
-          title={labels.language}
-        >
-          {isSpanish ? '🇪🇸' : '🇬🇧'}
-        </button>
-      </nav>
+
+        <nav className="flex items-center gap-0.5 flex-wrap">
+          {navItems.map(({ href, label, Icon }) => {
+            const isActive = router.pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-[13px] transition-colors duration-200 ${
+                  isActive ? 'bg-[#1a1d26] text-term-text' : 'text-term-muted hover:text-term-text'
+                }`}
+              >
+                <Icon className="text-base" />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href="https://github.com/atariki-haoa"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={labels.github}
+            title={labels.github}
+            className="w-8 h-8 rounded-lg border border-term-border flex items-center justify-center text-[10px] font-bold text-term-sub"
+          >
+            GH
+          </Link>
+          <Link
+            href="https://www.linkedin.com/in/arieloboshaoa/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={labels.linkedin}
+            title={labels.linkedin}
+            className="w-8 h-8 rounded-lg border border-term-border flex items-center justify-center text-[10px] font-bold text-term-sub"
+          >
+            in
+          </Link>
+          {availableLocales.length > 1 && (
+            <button
+              type="button"
+              onClick={toggleLocale}
+              aria-label={labels.language}
+              title={labels.language}
+              className="w-8 h-8 rounded-lg border border-term-border bg-transparent flex items-center justify-center text-[11px] font-bold text-term-sub"
+            >
+              {isSpanish ? 'EN' : 'ES'}
+            </button>
+          )}
+        </div>
+      </div>
     </header>
   );
 };

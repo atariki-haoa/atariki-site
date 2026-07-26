@@ -1,329 +1,214 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface TerminalLine {
-  type: 'input' | 'output' | 'prompt';
+  isInput?: boolean;
+  isOutput?: boolean;
   content: string;
 }
 
-type SendStep = null | 'name' | 'email' | 'message';
-
-const COMMANDS: Record<string, string[]> = {
-  help: [
-    'Available commands (type any and press Enter):',
-    '',
-    '  $ help      — Show this message',
-    '  $ about     — Who am I',
-    '  $ skills    — Tech stack & experience',
-    '  $ projects  — Featured work',
-    '  $ contact   — Get in touch',
-    '  $ send      — Send me a message directly',
-    '  $ clear     — Clear terminal',
-  ],
-  about: [
-    'Ariel Lobos — Computer Engineer & Full Stack Developer',
-    '',
-    '15+ years building software. I specialize in creating',
-    'robust solutions that bridge technical and non-technical',
-    'teams. Currently focused on React, Node.js, TypeScript,',
-    'and leading engineering teams.',
-  ],
-  skills: [
-    'Tech Stack:',
-    '',
-    '  React JS      4 years',
-    '  Node.js       6 years',
-    '  JavaScript    6 years',
-    '  TypeScript    5 years',
-    '  Python        4 years',
-    '  Flutter       3 years',
-  ],
-  projects: [
-    'Featured Projects:',
-    '',
-    '  [1] Personal Site        Next.js / TypeScript / Tailwind',
-    '  [2] Bar Management API   Node.js / MongoDB / Docker',
-    '  [3] Next.js Starter      TypeScript / Jest / ESLint',
-    '  [4] Chile GeoJSON        Python / Pandas / PostGIS',
-    '',
-    'Visit /projects for details.',
-  ],
-  contact: [
-    'Get in touch:',
-    '',
-    '  Email     → ariel@atariki.com',
-    '  GitHub    → github.com/atariki-haoa',
-    '  LinkedIn  → linkedin.com/in/atariki-haoa',
-    '',
-    'Or type $ send to message me directly from here.',
-  ],
-};
-
 const Terminal: React.FC = () => {
-  const [lines, setLines] = useState<TerminalLine[]>([
-    { type: 'output', content: 'Welcome to ariel.terminal v1.0.0' },
-    { type: 'output', content: 'Type "help" to see available commands.' },
-    { type: 'output', content: '' },
-  ]);
-  const [input, setInput] = useState('');
-  const [sendStep, setSendStep] = useState<SendStep>(null);
-  const [sendData, setSendData] = useState({ name: '', email: '' });
-  const [csrfToken, setCsrfToken] = useState<string | null>(null);
-  const outputRef = useRef<HTMLDivElement>(null);
+  const { locale } = useLanguage();
+  const isSpanish = locale === 'es';
+  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const copy = useMemo(
+    () =>
+      isSpanish
+        ? {
+            welcome: [
+              'Bienvenido a ariel.terminal v2.0.0',
+              'Escribe "help" para ver los comandos disponibles.',
+              ' ',
+            ],
+            commands: {
+              help: [
+                'Comandos disponibles:',
+                '',
+                '  help      — Muestra este mensaje',
+                '  about     — Quién soy',
+                '  skills    — Stack tecnológico',
+                '  projects  — Proyectos destacados',
+                '  contact   — Cómo contactarme',
+                '  clear     — Limpiar terminal',
+              ],
+              about: [
+                'Ariel Lobos — Full Stack Developer',
+                '',
+                '10+ años construyendo software. Especialista en',
+                'React, Node.js y TypeScript, liderando equipos',
+                'y conectando negocio con tecnología.',
+              ],
+              skills: [
+                'Tech Stack:',
+                '',
+                '  React JS      4 años',
+                '  Node.js       6 años',
+                '  TypeScript    5 años',
+                '  Python        4 años',
+                '  Flutter       3 años',
+              ],
+              projects: [
+                'Proyectos Destacados:',
+                '',
+                '  [1] Sitio Personal        Next.js / TypeScript',
+                '  [2] API Gestión Bares    Node.js / MongoDB',
+                '  [3] Next.js Starter       TypeScript / Jest',
+                '  [4] Chile GeoJSON         Python / PostGIS',
+                '',
+                'Visita /proyectos para más detalles.',
+              ],
+              contact: [
+                'Contáctame:',
+                '',
+                '  Email     → ariel@atariki.com',
+                '  GitHub    → github.com/atariki-haoa',
+                '  LinkedIn  → linkedin.com/in/atariki-haoa',
+              ],
+            },
+            notFound: (cmd: string) => `comando no encontrado: ${cmd}`,
+            promptLabel: 'ariel@portfolio: ~',
+          }
+        : {
+            welcome: [
+              'Welcome to ariel.terminal v2.0.0',
+              'Type "help" to see available commands.',
+              ' ',
+            ],
+            commands: {
+              help: [
+                'Available commands:',
+                '',
+                '  help      — Show this message',
+                '  about     — Who I am',
+                '  skills    — Tech stack',
+                '  projects  — Featured projects',
+                '  contact   — How to reach me',
+                '  clear     — Clear terminal',
+              ],
+              about: [
+                'Ariel Lobos — Full Stack Developer',
+                '',
+                '10+ years building software. Specialist in',
+                'React, Node.js and TypeScript, leading teams',
+                'and connecting business with technology.',
+              ],
+              skills: [
+                'Tech Stack:',
+                '',
+                '  React JS      4 years',
+                '  Node.js       6 years',
+                '  TypeScript    5 years',
+                '  Python        4 years',
+                '  Flutter       3 years',
+              ],
+              projects: [
+                'Featured Projects:',
+                '',
+                '  [1] Personal Site          Next.js / TypeScript',
+                '  [2] Bar Management API    Node.js / MongoDB',
+                '  [3] Next.js Starter        TypeScript / Jest',
+                '  [4] Chile GeoJSON          Python / PostGIS',
+                '',
+                'Visit /projects for more details.',
+              ],
+              contact: [
+                'Contact me:',
+                '',
+                '  Email     → ariel@atariki.com',
+                '  GitHub    → github.com/atariki-haoa',
+                '  LinkedIn  → linkedin.com/in/atariki-haoa',
+              ],
+            },
+            notFound: (cmd: string) => `command not found: ${cmd}`,
+            promptLabel: 'ariel@portfolio: ~',
+          },
+    [isSpanish]
+  );
+
+  const [lines, setLines] = useState<TerminalLine[]>([]);
+  const [input, setInput] = useState('');
+
   useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    setLines(copy.welcome.map(content => ({ isOutput: true, content })));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [lines]);
 
-  const fetchCsrf = useCallback(async (): Promise<string | null> => {
-    if (csrfToken) return csrfToken;
-    try {
-      const res = await fetch('/api/csrf');
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (!data.csrfToken) return null;
-      setCsrfToken(data.csrfToken);
-      return data.csrfToken as string;
-    } catch {
-      return null;
-    }
-  }, [csrfToken]);
-
-  const addLines = useCallback((newLines: TerminalLine[]) => {
-    setLines(prev => [...prev, ...newLines]);
-  }, []);
-
-  const handleSendFlow = useCallback(
-    async (value: string) => {
-      const trimmed = value.trim();
-
-      if (sendStep === 'name') {
-        if (!trimmed) {
-          addLines([
-            { type: 'prompt', content: `name: ${value}` },
-            { type: 'output', content: 'Name cannot be empty. Try again:' },
-            { type: 'output', content: '' },
-          ]);
-          return;
-        }
-        setSendData(prev => ({ ...prev, name: trimmed }));
-        setSendStep('email');
-        addLines([
-          { type: 'prompt', content: `name: ${trimmed}` },
-          { type: 'output', content: '' },
-          { type: 'output', content: 'email:' },
-        ]);
-        return;
-      }
-
-      if (sendStep === 'email') {
-        if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-          addLines([
-            { type: 'prompt', content: `email: ${value}` },
-            { type: 'output', content: 'Please enter a valid email. Try again:' },
-            { type: 'output', content: '' },
-          ]);
-          return;
-        }
-        setSendData(prev => ({ ...prev, email: trimmed }));
-        setSendStep('message');
-        addLines([
-          { type: 'prompt', content: `email: ${trimmed}` },
-          { type: 'output', content: '' },
-          { type: 'output', content: 'message:' },
-        ]);
-        return;
-      }
-
-      if (sendStep === 'message') {
-        if (!trimmed) {
-          addLines([
-            { type: 'prompt', content: `message: ${value}` },
-            { type: 'output', content: 'Message cannot be empty. Try again:' },
-            { type: 'output', content: '' },
-          ]);
-          return;
-        }
-
-        addLines([
-          { type: 'prompt', content: `message: ${trimmed}` },
-          { type: 'output', content: '' },
-          { type: 'output', content: 'Sending...' },
-        ]);
-
-        setSendStep(null);
-
-        try {
-          const token = await fetchCsrf();
-          if (!token) {
-            addLines([
-              { type: 'output', content: 'Error: could not verify session. Try again later.' },
-              { type: 'output', content: '' },
-            ]);
-            setSendData({ name: '', email: '' });
-            return;
-          }
-
-          const res = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'CSRF-Token': token || '',
-            },
-            body: JSON.stringify({
-              name: sendData.name,
-              email: sendData.email,
-              message: trimmed,
-            }),
-          });
-
-          if (res.ok) {
-            addLines([
-              { type: 'output', content: 'Message sent successfully.' },
-              { type: 'output', content: '' },
-            ]);
-          } else {
-            addLines([
-              { type: 'output', content: 'Error: could not send message. Try again later.' },
-              { type: 'output', content: '' },
-            ]);
-          }
-        } catch {
-          addLines([
-            { type: 'output', content: 'Error: connection failed. Try again later.' },
-            { type: 'output', content: '' },
-          ]);
-        }
-
-        setSendData({ name: '', email: '' });
-      }
-    },
-    [sendStep, sendData, addLines, fetchCsrf]
-  );
-
-  const handleCommand = useCallback(
-    (cmd: string) => {
-      const trimmed = cmd.trim().toLowerCase();
-
-      if (sendStep) {
-        handleSendFlow(cmd);
-        return;
-      }
-
-      const newLines: TerminalLine[] = [{ type: 'input', content: cmd }];
-
-      if (trimmed === '') {
-        setLines(prev => [...prev, ...newLines]);
-        return;
-      }
-
-      if (trimmed === 'clear') {
-        setLines([]);
-        setSendStep(null);
-        setSendData({ name: '', email: '' });
-        return;
-      }
-
-      if (trimmed === 'send') {
-        setSendStep('name');
-        newLines.push(
-          { type: 'output', content: '' },
-          { type: 'output', content: 'Send a message to Ariel.' },
-          { type: 'output', content: 'Type "cancel" at any step to abort.' },
-          { type: 'output', content: '' },
-          { type: 'output', content: 'name:' }
-        );
-        setLines(prev => [...prev, ...newLines]);
-        return;
-      }
-
-      const response = COMMANDS[trimmed];
-      if (response) {
-        response.forEach(line => {
-          newLines.push({ type: 'output', content: line });
-        });
-      } else {
-        newLines.push({ type: 'output', content: `command not found: ${trimmed}` });
-      }
-      newLines.push({ type: 'output', content: '' });
-
-      setLines(prev => [...prev, ...newLines]);
-    },
-    [sendStep, handleSendFlow]
-  );
-
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const value = input;
-      setInput('');
-
-      if (sendStep && value.trim().toLowerCase() === 'cancel') {
-        setSendStep(null);
-        setSendData({ name: '', email: '' });
-        addLines([
-          { type: 'prompt', content: value },
-          { type: 'output', content: 'Cancelled.' },
-          { type: 'output', content: '' },
-        ]);
-        return;
-      }
-
-      handleCommand(value);
-    },
-    [input, sendStep, handleCommand, addLines]
-  );
-
-  const handleContainerClick = useCallback(() => {
+  const focusInput = () => {
     inputRef.current?.focus();
-  }, []);
+  };
 
-  const promptSymbol = sendStep ? '>' : '$';
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const raw = input;
+    const trimmed = raw.trim().toLowerCase();
+    setInput('');
+
+    if (trimmed === 'clear') {
+      setLines([]);
+      return;
+    }
+
+    const newLines: TerminalLine[] = [{ isInput: true, content: raw }];
+
+    if (trimmed === '') {
+      setLines(prev => [...prev, ...newLines]);
+      return;
+    }
+
+    const response = (copy.commands as Record<string, string[]>)[trimmed];
+    if (response) {
+      response.forEach(line => newLines.push({ isOutput: true, content: line || ' ' }));
+    } else {
+      newLines.push({ isOutput: true, content: copy.notFound(trimmed) });
+    }
+    newLines.push({ isOutput: true, content: ' ' });
+
+    setLines(prev => [...prev, ...newLines]);
+  };
 
   return (
-    <div
-      onClick={handleContainerClick}
-      className="w-full bg-gray-950 rounded-lg border border-gray-700 shadow-2xl font-mono text-sm overflow-hidden cursor-text"
-    >
-      <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 border-b border-gray-700">
-        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-        <span className="ml-2 text-gray-500 text-xs">ariel@portfolio:~</span>
+    <div className="bg-term-terminal border border-term-border rounded-2xl shadow-[0_30px_60px_-20px_#00000090] overflow-hidden">
+      <div className="flex items-center gap-2 px-4 py-3 bg-term-panel border-b border-term-border">
+        <span className="w-[11px] h-[11px] rounded-full bg-term-red" />
+        <span className="w-[11px] h-[11px] rounded-full bg-term-amber" />
+        <span className="w-[11px] h-[11px] rounded-full bg-term-green" />
+        <span className="ml-2 text-xs text-term-dim">{copy.promptLabel}</span>
       </div>
-
-      <div ref={outputRef} className="p-4 h-64 overflow-y-auto">
+      <div
+        ref={containerRef}
+        onClick={focusInput}
+        className="p-[18px] h-[280px] overflow-y-auto text-[13.5px] leading-[1.8] cursor-text"
+      >
         {lines.map((line, i) => (
-          <div key={i} className="leading-relaxed">
-            {line.type === 'input' ? (
+          <div key={i}>
+            {line.isInput && (
               <span>
-                <span className="text-green-400">$ </span>
-                <span className="text-gray-300">{line.content}</span>
+                <span className="text-term-green">$ </span>
+                <span className="text-term-sub">{line.content}</span>
               </span>
-            ) : line.type === 'prompt' ? (
-              <span>
-                <span className="text-yellow-400">&gt; </span>
-                <span className="text-gray-300">{line.content}</span>
-              </span>
-            ) : (
-              <span className="text-gray-400">{line.content || '\u00A0'}</span>
             )}
+            {line.isOutput && <span className="text-term-muted">{line.content}</span>}
           </div>
         ))}
-
         <form onSubmit={handleSubmit} className="flex items-center">
-          <span className={sendStep ? 'text-yellow-400' : 'text-green-400'}>{promptSymbol} </span>
+          <span className="text-term-green">$&nbsp;</span>
           <input
             ref={inputRef}
-            type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
-            className="flex-1 bg-transparent text-gray-300 outline-none ml-1 caret-green-400"
             autoComplete="off"
             spellCheck={false}
+            className="flex-1 bg-transparent border-none outline-none text-term-sub font-mono text-[13.5px]"
           />
+          <span className="w-[7px] h-[15px] bg-term-green animate-blink" />
         </form>
       </div>
     </div>

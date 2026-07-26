@@ -3,14 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaGithub,
   FaExternalLinkAlt,
-  FaCalendarAlt,
-  FaUsers,
   FaChevronDown,
   FaStar,
   FaCode,
-  FaRocket,
   FaDatabase,
   FaCog,
+  FaRocket,
 } from 'react-icons/fa';
 import { useLanguage } from '../../context/LanguageContext';
 import type { ProjectData, ProjectCategoryKey, ProjectStatusKey } from '../../types/project';
@@ -22,56 +20,42 @@ interface ProjectCardProps {
   onToggleExpand?: (index: number) => void;
 }
 
-const getCategoryIcon = (category: ProjectCategoryKey) => {
-  switch (category) {
-    case 'frontend':
-      return FaCode;
-    case 'backend':
-      return FaDatabase;
-    case 'devops':
-      return FaCog;
-    case 'data_science':
-      return FaRocket;
-    default:
-      return FaCode;
-  }
+const CATEGORY_ACCENT: Record<ProjectCategoryKey, string> = {
+  frontend: '#5b93ff',
+  backend: '#4ade80',
+  devops: '#a68bfa',
+  data_science: '#fbbf24',
+  mobile: '#5b93ff',
+  full_stack: '#a68bfa',
 };
 
-const getCategoryColor = (category: ProjectCategoryKey) => {
-  switch (category) {
-    case 'frontend':
-      return 'from-blue-600 to-cyan-600';
-    case 'backend':
-      return 'from-green-600 to-emerald-600';
-    case 'devops':
-      return 'from-orange-600 to-red-600';
-    case 'data_science':
-      return 'from-purple-600 to-pink-600';
-    default:
-      return 'from-gray-600 to-gray-700';
-  }
+const STATUS_ACCENT: Record<ProjectStatusKey, string> = {
+  in_progress: '#5b93ff',
+  completed: '#4ade80',
+  maintenance: '#fbbf24',
+  paused: '#8b93a3',
 };
 
-const getStatusColor = (status: ProjectStatusKey) => {
-  switch (status) {
-    case 'completed':
-      return 'bg-green-600';
-    case 'in_progress':
-      return 'bg-blue-600';
-    case 'maintenance':
-      return 'bg-yellow-600';
-    default:
-      return 'bg-gray-600';
-  }
+const CATEGORY_ICON: Record<ProjectCategoryKey, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
+  frontend: FaCode,
+  backend: FaDatabase,
+  devops: FaCog,
+  data_science: FaRocket,
+  mobile: FaCode,
+  full_stack: FaRocket,
 };
+
+const getCategoryAccent = (category: ProjectCategoryKey) => CATEGORY_ACCENT[category] ?? '#5b93ff';
+const getStatusAccent = (status: ProjectStatusKey) => STATUS_ACCENT[status] ?? '#8b93a3';
+const getCategoryIcon = (category: ProjectCategoryKey) => CATEGORY_ICON[category] ?? FaCode;
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = false, onToggleExpand }) => {
   const { locale } = useLanguage();
   const isSpanish = locale === 'es';
 
+  const categoryAccent = getCategoryAccent(project.categoryKey);
+  const statusAccent = getStatusAccent(project.statusKey);
   const CategoryIcon = getCategoryIcon(project.categoryKey);
-  const categoryGradient = getCategoryColor(project.categoryKey);
-  const statusColor = getStatusColor(project.statusKey);
 
   const dateFormatter = useMemo(() => {
     const language = isSpanish ? 'es-CL' : 'en-US';
@@ -91,7 +75,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
             durationLabel: 'Duración:',
             highlights: 'Aspectos Destacados',
             technologies: 'Tecnologías Utilizadas',
-            viewCode: 'Ver Código',
+            viewCode: 'Código',
             viewDemo: 'Ver Demo',
             moreTechnologies: (count: number) => `+${count} más`,
             present: 'Presente',
@@ -103,14 +87,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
         : {
             featured: 'Featured',
             expand: 'View details',
-            collapse: 'Show less',
+            collapse: 'View less',
             longDescription: 'Detailed Description',
             info: 'Project Information',
             metrics: 'Metrics',
             durationLabel: 'Duration:',
             highlights: 'Highlights',
             technologies: 'Technologies Used',
-            viewCode: 'View Code',
+            viewCode: 'Code',
             viewDemo: 'View Demo',
             moreTechnologies: (count: number) => `+${count} more`,
             present: 'Present',
@@ -174,68 +158,63 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`relative bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 ${
-        project.featured ? 'ring-2 ring-yellow-500/20' : ''
-      }`}
+      className="relative bg-term-panel border border-term-border rounded-2xl overflow-hidden"
     >
-      {/* Featured Badge */}
       {project.featured && (
         <div className="absolute top-4 right-4 z-10">
-          <div className="bg-yellow-500 text-gray-900 px-2 py-1 rounded-full text-xs font-bold flex items-center">
-            <FaStar className="mr-1" size={10} />
+          <div className="bg-term-amber text-term-bg px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1">
+            <FaStar size={10} />
             {copy.featured}
           </div>
         </div>
       )}
 
-      {/* Header */}
-      <div className="p-6 pb-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center space-x-3">
-            <div className={`p-2 rounded-lg bg-gradient-to-r ${categoryGradient}`}>
-              <CategoryIcon className="text-white" size={20} />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-100 leading-tight">{project.title}</h3>
-              <div className="flex items-center space-x-2 mt-1">
-                <span className="text-sm text-gray-400">{project.categoryLabel}</span>
-                <span className={`px-2 py-1 rounded-full text-xs text-white ${statusColor}`}>
-                  {project.statusLabel}
-                </span>
-              </div>
+      <div className="p-[22px] pb-4">
+        <div className="flex items-center gap-3 mb-3">
+          <div
+            className="w-10 h-10 rounded-[10px] flex items-center justify-center flex-shrink-0"
+            style={{ background: `${categoryAccent}1c` }}
+          >
+            <CategoryIcon style={{ color: categoryAccent }} size={18} />
+          </div>
+          <div>
+            <h3 className="text-[17px] font-bold text-term-text">{project.title}</h3>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-[12.5px] text-term-dim">{project.categoryLabel}</span>
+              <span className="w-[5px] h-[5px] rounded-full" style={{ background: statusAccent }} />
+              <span className="text-xs" style={{ color: statusAccent }}>
+                {project.statusLabel}
+              </span>
             </div>
           </div>
         </div>
 
-        <p className="text-gray-300 text-sm leading-relaxed mb-4">{project.description}</p>
+        <p className="text-term-sub text-[13.5px] leading-relaxed mb-3.5">{project.description}</p>
 
-        {/* Technologies Preview */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1.5 mb-3.5">
           {formattedTechnologiesPreview.preview.map((tech, techIndex) => (
-            <span key={techIndex} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-md">
+            <span key={techIndex} className="px-2.5 py-1 bg-term-panelAlt text-term-sub text-[11px] rounded-md">
               {tech}
             </span>
           ))}
           {formattedTechnologiesPreview.remainingLabel && (
-            <span className="px-2 py-1 bg-gray-600 text-gray-400 text-xs rounded-md">
+            <span className="px-2.5 py-1 bg-term-panelAlt text-term-dim text-[11px] rounded-md">
               {formattedTechnologiesPreview.remainingLabel}
             </span>
           )}
         </div>
 
-        {/* Expand Button */}
         <button
           onClick={toggleExpanded}
-          className="w-full flex items-center justify-center py-2 text-gray-400 hover:text-gray-200 transition-colors duration-200"
+          className="w-full flex items-center justify-center gap-1.5 border-t border-term-border pt-3 pb-0.5 text-term-dim hover:text-term-sub transition-colors duration-200 text-[13px]"
         >
-          <span className="text-sm mr-2">{isExpanded ? copy.collapse : copy.expand}</span>
-          <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.3 }}>
+          {isExpanded ? copy.collapse : copy.expand}
+          <motion.span animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <FaChevronDown size={12} />
-          </motion.div>
+          </motion.span>
         </button>
       </div>
 
-      {/* Expanded Content */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -243,48 +222,38 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="border-t border-gray-700"
+            className="border-t border-term-border"
           >
-            <div className="p-6 pt-4 space-y-4">
-              {/* Long Description */}
+            <div className="p-[22px] pt-4 space-y-4">
               <div>
-                <h4 className="text-sm font-semibold text-gray-200 mb-2">{copy.longDescription}</h4>
-                <p className="text-gray-300 text-sm leading-relaxed">{project.longDescription}</p>
+                <h4 className="text-[13px] font-bold text-term-sub mb-2">{copy.longDescription}</h4>
+                <p className="text-term-sub text-[13.5px] leading-relaxed">{project.longDescription}</p>
               </div>
 
-              {/* Project Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-200 mb-2">{copy.info}</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center text-gray-300">
-                      <FaCalendarAlt className="mr-2 text-gray-400" size={12} />
-                      <span>
-                        {formatDate(project.startDate)} -{' '}
-                        {project.endDate ? formatDate(project.endDate) : copy.present}
-                      </span>
+                  <h4 className="text-[13px] font-bold text-term-sub mb-2">{copy.info}</h4>
+                  <div className="space-y-1.5 text-[13px] text-term-muted">
+                    <div>
+                      {formatDate(project.startDate)} — {project.endDate ? formatDate(project.endDate) : copy.present}
                     </div>
-                    <div className="flex items-center text-gray-300">
-                      <FaUsers className="mr-2 text-gray-400" size={12} />
-                      <span>
-                        {project.role} • {project.teamSize} {copy.teamLabel(project.teamSize)}
-                      </span>
+                    <div>
+                      {project.role} · {project.teamSize} {copy.teamLabel(project.teamSize)}
                     </div>
-                    <div className="text-gray-300">
-                      <span className="text-gray-400">{copy.durationLabel}</span> {getDuration()}
+                    <div>
+                      <span className="text-term-dim">{copy.durationLabel}</span> {getDuration()}
                     </div>
                   </div>
                 </div>
 
-                {/* Metrics */}
                 {project.metrics.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-semibold text-gray-200 mb-2">{copy.metrics}</h4>
+                    <h4 className="text-[13px] font-bold text-term-sub mb-2">{copy.metrics}</h4>
                     <div className="space-y-1">
                       {project.metrics.map(metric => (
-                        <div key={metric.label} className="flex justify-between text-sm">
-                          <span className="text-gray-400">{metric.label}:</span>
-                          <span className="text-gray-300 font-medium">{metric.value}</span>
+                        <div key={metric.label} className="flex justify-between text-[13px]">
+                          <span className="text-term-dim">{metric.label}:</span>
+                          <span className="text-term-sub font-medium">{metric.value}</span>
                         </div>
                       ))}
                     </div>
@@ -292,27 +261,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
                 )}
               </div>
 
-              {/* Highlights */}
               <div>
-                <h4 className="text-sm font-semibold text-gray-200 mb-2">{copy.highlights}</h4>
+                <h4 className="text-[13px] font-bold text-term-sub mb-2">{copy.highlights}</h4>
                 <ul className="space-y-1">
                   {project.highlights.map((highlight, highlightIndex) => (
-                    <li key={highlightIndex} className="text-sm text-gray-300 flex items-start">
-                      <span className="text-blue-400 mr-2 mt-1">•</span>
+                    <li key={highlightIndex} className="text-[13px] text-term-sub flex items-start">
+                      <span className="text-term-blue mr-2 mt-1">•</span>
                       {highlight}
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {/* All Technologies */}
               <div>
-                <h4 className="text-sm font-semibold text-gray-200 mb-2">{copy.technologies}</h4>
-                <div className="flex flex-wrap gap-2">
+                <h4 className="text-[13px] font-bold text-term-sub mb-2">{copy.technologies}</h4>
+                <div className="flex flex-wrap gap-1.5">
                   {project.technologies.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full border border-gray-600"
+                      className="px-2.5 py-1 bg-term-panelAlt text-term-sub text-[11px] rounded-md border border-term-border"
                     >
                       {tech}
                     </span>
@@ -320,15 +287,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 pt-2">
+              <div className="flex flex-wrap gap-2.5 pt-1">
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg transition-colors duration-200 text-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-term-panelAlt text-term-sub rounded-lg text-[12.5px]"
                 >
-                  <FaGithub className="mr-2" size={14} />
+                  <FaGithub size={14} />
                   {copy.viewCode}
                 </a>
                 {project.liveUrl && (
@@ -336,9 +302,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, isExpanded = 
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center px-4 py-2 bg-gradient-to-r ${categoryGradient} hover:opacity-90 text-white rounded-lg transition-opacity duration-200 text-sm`}
+                    className="flex items-center gap-1.5 px-4 py-2 text-white rounded-lg text-[12.5px]"
+                    style={{ background: 'linear-gradient(120deg,#3f6fe0,#8b6ff0)' }}
                   >
-                    <FaExternalLinkAlt className="mr-2" size={14} />
+                    <FaExternalLinkAlt size={14} />
                     {copy.viewDemo}
                   </a>
                 )}

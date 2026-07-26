@@ -221,15 +221,20 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
     }
   };
 
+  const inputClass = (hasError: boolean) =>
+    `w-full px-3.5 py-[11px] bg-term-panelAlt border rounded-lg text-term-text placeholder-term-dim font-mono text-sm transition-colors ${
+      hasError ? 'border-term-red' : 'border-term-border'
+    }`;
+
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-gray-800 rounded-3xl shadow-lg p-8 glass">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gradient-blue">{copy.title}</h2>
+      <div className="bg-term-panel border border-term-border rounded-2xl p-8">
+        <h2 className="text-[28px] font-bold text-center mb-7 text-gradient-hero">{copy.title}</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.name} <span className="text-red-500">*</span>
+            <label htmlFor="name" className="block text-[13px] text-term-sub mb-1.5">
+              {copy.labels.name}
             </label>
             <input
               type="text"
@@ -237,16 +242,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.name ? 'border-red-500' : 'border-gray-600'
-              }`}
+              className={inputClass(!!errors.name)}
               placeholder={copy.placeholders.name}
             />
-            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+            {errors.name && <p className="mt-1.5 text-xs text-term-red">{errors.name}</p>}
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="phone" className="block text-[13px] text-term-sub mb-1.5">
               {copy.labels.phone}
             </label>
             <input
@@ -255,14 +258,14 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              className={inputClass(false)}
               placeholder={copy.placeholders.phone}
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.email} <span className="text-red-500">*</span>
+            <label htmlFor="email" className="block text-[13px] text-term-sub mb-1.5">
+              {copy.labels.email}
             </label>
             <input
               type="email"
@@ -270,26 +273,22 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.email ? 'border-red-500' : 'border-gray-600'
-              }`}
+              className={inputClass(!!errors.email)}
               placeholder={copy.placeholders.email}
             />
-            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+            {errors.email && <p className="mt-1.5 text-xs text-term-red">{errors.email}</p>}
           </div>
 
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.budget} ({isSpanish ? 'CLP' : 'USD'}) <span className="text-red-500">*</span>
+            <label htmlFor="budget" className="block text-[13px] text-term-sub mb-1.5">
+              {copy.labels.budget} ({isSpanish ? 'CLP' : 'USD'})
             </label>
             <select
               id="budget"
               name="budget"
               value={formData.budget}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.budget ? 'border-red-500' : 'border-gray-600'
-              }`}
+              className={inputClass(!!errors.budget)}
             >
               <option value="">{copy.placeholders.budget}</option>
               {budgetOptions.map(amount => (
@@ -298,21 +297,19 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 </option>
               ))}
             </select>
-            {errors.budget && <p className="mt-1 text-sm text-red-500">{errors.budget}</p>}
+            {errors.budget && <p className="mt-1.5 text-xs text-term-red">{errors.budget}</p>}
           </div>
 
           <div>
-            <label htmlFor="technology" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.technology} <span className="text-red-500">*</span>
+            <label htmlFor="technology" className="block text-[13px] text-term-sub mb-1.5">
+              {copy.labels.technology}
             </label>
             <select
               id="technology"
               name="technology"
               value={formData.technology}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.technology ? 'border-red-500' : 'border-gray-600'
-              }`}
+              className={inputClass(!!errors.technology)}
             >
               <option value="">{copy.placeholders.technology}</option>
               {technologyOptions.map(option => (
@@ -321,21 +318,19 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 </option>
               ))}
             </select>
-            {errors.technology && <p className="mt-1 text-sm text-red-500">{errors.technology}</p>}
+            {errors.technology && <p className="mt-1.5 text-xs text-term-red">{errors.technology}</p>}
           </div>
 
           <div>
-            <label htmlFor="timeline" className="block text-sm font-medium text-gray-300 mb-2">
-              {copy.labels.timeline} <span className="text-red-500">*</span>
+            <label htmlFor="timeline" className="block text-[13px] text-term-sub mb-1.5">
+              {copy.labels.timeline}
             </label>
             <select
               id="timeline"
               name="timeline"
               value={formData.timeline}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 bg-gray-700 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                errors.timeline ? 'border-red-500' : 'border-gray-600'
-              }`}
+              className={inputClass(!!errors.timeline)}
             >
               <option value="">{copy.placeholders.timeline}</option>
               {timelineOptions.map(option => (
@@ -344,17 +339,16 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, isSubmitting = false })
                 </option>
               ))}
             </select>
-            {errors.timeline && <p className="mt-1 text-sm text-red-500">{errors.timeline}</p>}
+            {errors.timeline && <p className="mt-1.5 text-xs text-term-red">{errors.timeline}</p>}
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full font-semibold py-4 px-6 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 ${
-              isSubmitting
-                ? 'bg-blue-800 text-gray-300 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transform hover:scale-105'
-            }`}
+            className="w-full text-white font-semibold py-[13px] px-6 rounded-[10px] text-[14.5px]"
+            style={{
+              background: isSubmitting ? '#2d3a5c' : 'linear-gradient(120deg,#3f6fe0,#8b6ff0)',
+            }}
           >
             {isSubmitting ? copy.submit.loading : copy.submit.idle}
           </button>

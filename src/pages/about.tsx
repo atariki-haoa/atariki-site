@@ -23,8 +23,8 @@ const AboutPage: React.FC = () => {
 
   return (
     <Layout title={meta.title} description={meta.description} canonicalUrl="/about">
-      <div className="min-h-screen flex flex-col bg-transparent text-gray-100">
-        <main className="flex-1 p-8">
+      <div className="min-h-screen flex flex-col bg-transparent text-term-text">
+        <main className="flex-1">
           <Experience />
         </main>
       </div>

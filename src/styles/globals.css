@@ -4,21 +4,16 @@
 
 body {
   font-family: 'Fira Code', monospace;
-  background-color: #1E1E1E;
-  background-image: 
-  linear-gradient(65deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-  linear-gradient(135deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-  linear-gradient(45deg, transparent 74px, rgba(255, 255, 255, 0.1) 75px, transparent 76px),
-  linear-gradient(125deg, transparent 70px, rgba(255, 255, 255, 0.1) 75px, transparent 76px),
-  linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px), /* Líneas más finas */
-  linear-gradient(30deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px); /* Líneas más finas */
-background-size: 120px 120px, 120px 120px, 100px 100px, 100px 100px, 200px 200px, 200px 200px;
-background-blend-mode: overlay;
-@apply bg-gray-900 text-gray-100;
+  background-color: #0a0b0f;
+  color: #eef0f4;
 }
 
 a {
-  color: #007ACC;
+  color: #5b93ff;
+}
+
+a:hover {
+  color: #7fabff;
 }
 
 button {
@@ -236,14 +231,21 @@ header, footer {
 
 /* Text gradient utilities */
 .text-gradient-blue {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(120deg, #5b93ff, #a68bfa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-purple {
-  background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+  background: linear-gradient(120deg, #a68bfa, #5b93ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-hero {
+  background: linear-gradient(120deg, #eef0f4 20%, #5b93ff 55%, #a68bfa 85%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
