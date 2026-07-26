@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+dist
+.git
+.github
+.claude
+.cursor
+.env
+.env.*
+*.log
+coverage
+.vscode
+.idea
+tsconfig.tsbuildinfo
+README.md
