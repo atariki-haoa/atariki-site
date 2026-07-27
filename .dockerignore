@@ -14,3 +14,4 @@ coverage
 .idea
 tsconfig.tsbuildinfo
 README.md
+data
