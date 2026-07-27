@@ -14,6 +14,11 @@ npm run export   # Export static site
 
 There are no tests configured.
 
+## Git Workflow
+
+- Base branch for all work is `dev`, not `master`. Branch off `dev`, and open PRs targeting `dev`.
+- Never target `master` directly — no branching from it, no PRs into it — unless the user explicitly asks for it in that conversation.
+
 ## Architecture
 
 This is a **Next.js 14 portfolio site** with a custom Express server, TypeScript, Tailwind CSS, and bilingual (ES/EN) support.
