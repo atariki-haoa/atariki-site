@@ -35,6 +35,8 @@ Components in `src/components/` are split into three categories — keep this se
 
 All content (projects, experience, skills) lives in `src/data/` as TypeScript files. Data is bilingual — keyed by locale (`es`/`en`). Never hardcode content data directly in components.
 
+Blog posts are the one exception: they live in SQLite (`src/server/db.ts`, `src/server/postsRepo.ts`), not `src/data/`, since they're written at runtime rather than committed to git (see `docs/shaping/blog-system.md`, R8). Posts are always in English — `/blog` does not filter by site locale.
+
 ### Localization
 
 - `LanguageContext` in `src/context/LanguageContext.tsx` manages global locale state
@@ -46,6 +48,7 @@ All content (projects, experience, skills) lives in `src/data/` as TypeScript fi
 - `GET /api/csrf` — Returns a CSRF token
 - `POST /api/contact` — Sends email via Mailgun (rate-limited: 3/hour per IP, CSRF required)
 - `POST /api/quote` — Generates project cost estimate using `src/utils/quoteCalculator.ts`
+- `GET /api/blog/[slug]/download` — Serves a post's `content_md` as a downloadable `.md` file
 
 ### Environment Variables
 
@@ -53,6 +56,9 @@ Required in `.env` (see `next.config.js`):
 - `MAILGUN_API_KEY`, `MAILGUN_DOMAIN` — Email sending
 - `CSRF_SECRET` — CSRF token signing
 - `NEXT_PUBLIC_BASE_URL` — Public base URL
+
+Optional:
+- `BLOG_DB_PATH` — Path to the SQLite file backing the blog. Defaults to `./data/blog.db`. In Docker this should stay under `/app/data`, the mount point of the `blog-data` volume in `docker-compose.yml`.
 
 ### Key Rules (from `.cursor/rules/`)
 

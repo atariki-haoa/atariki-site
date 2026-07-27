@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "export": "next export"
+    "export": "next export",
+    "seed:post": "node scripts/seed-post.js"
   },
   "keywords": [
     "desarrollador",
