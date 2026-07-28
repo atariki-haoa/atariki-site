@@ -2,6 +2,8 @@ import 'dotenv/config';
 import express from 'express';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import postsRouter from './routes/posts.js';
+import contactRouter from './routes/contact.js';
+import quoteRouter from './routes/quote.js';
 import { verifyApiKey } from './middleware/verifyApiKey.js';
 import { verifyMcpBearerToken } from './mcp/auth.js';
 import { createMcpServer } from './mcp/server.js';
@@ -10,6 +12,8 @@ const app = express();
 app.use(express.json());
 
 app.use('/posts', verifyApiKey, postsRouter);
+app.use('/contact', verifyApiKey, contactRouter);
+app.use('/quote', verifyApiKey, quoteRouter);
 
 app.post('/mcp', async (req, res) => {
   if (!verifyMcpBearerToken(req.headers.authorization)) {
