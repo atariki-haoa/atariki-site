@@ -3,7 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Markdown from 'react-markdown';
 import Layout from '../../components/functional/Layout';
 import { useLanguage } from '../../context/LanguageContext';
-import postsRepo from '../../server/postsRepo';
+import { getPostBySlug } from '../../server/backendClient';
 import type { PostData } from '../../types/post';
 
 interface BlogPostPageProps {
@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<BlogPostPageProps> = async (
     return { notFound: true };
   }
 
-  const post = postsRepo.getBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) {
     return { notFound: true };
   }

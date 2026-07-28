@@ -3,7 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Layout from '../../components/functional/Layout';
 import BlogListSection from '../../components/logical/BlogListSection';
 import { useLanguage } from '../../context/LanguageContext';
-import postsRepo from '../../server/postsRepo';
+import { listPosts } from '../../server/backendClient';
 import type { PostData } from '../../types/post';
 
 interface BlogPageProps {
@@ -46,7 +46,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ posts }) => {
 };
 
 export const getServerSideProps: GetServerSideProps<BlogPageProps> = async () => {
-  const posts = postsRepo.list();
+  const posts = await listPosts();
   return { props: { posts } };
 };
 
