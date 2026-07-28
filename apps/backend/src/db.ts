@@ -31,10 +31,10 @@ declare global {
   var __blogDb: DatabaseSync | undefined;
 }
 
-const db = global.__blogDb ?? createDatabase();
+const db = globalThis.__blogDb ?? createDatabase();
 
 if (process.env.NODE_ENV !== 'production') {
-  global.__blogDb = db;
+  globalThis.__blogDb = db;
 }
 
 export default db;
