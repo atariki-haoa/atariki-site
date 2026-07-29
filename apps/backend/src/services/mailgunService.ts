@@ -1,12 +1,13 @@
 import Mailgun from 'mailgun.js';
 import FormData from 'form-data';
-import { escapeHtml } from './sanitize';
+import { escapeHtml } from '../utils/sanitize.js';
 
 interface EmailData {
   to: string;
   subject: string;
   text: string;
   html: string;
+  from?: string;
 }
 
 class MailgunService {
@@ -22,17 +23,21 @@ class MailgunService {
     }
 
     this.domain = domain;
-    const mailgun = new Mailgun(FormData);
+    // mailgun.js's CJS default export isn't constructable under NodeNext's module
+    // resolution (TS resolves the import to the module namespace, not the class);
+    // the cast reflects the documented `new Mailgun(FormData)` usage that works at runtime.
+    const MailgunCtor = Mailgun as unknown as new (formData: unknown) => { client: (options: unknown) => any };
+    const mailgun = new MailgunCtor(FormData);
     this.mg = mailgun.client({
       username: 'api',
       key: apiKey,
     });
   }
 
-  async sendEmail({ to, subject, text, html }: EmailData) {
+  async sendEmail({ to, subject, text, html, from }: EmailData) {
     try {
       const messageData = {
-        from: `Cotizaciones Atariki <noreply@${this.domain}>`,
+        from: from ?? `Cotizaciones Atariki <noreply@${this.domain}>`,
         to,
         subject,
         text,
@@ -91,7 +96,7 @@ class MailgunService {
     const safePhone = escapeHtml(quoteData.phone || 'No proporcionado');
 
     const subject = `Nueva solicitud de cotización - ${quoteData.name}`;
-    
+
     const text = `
 Nueva solicitud de cotización recibida:
 
@@ -114,7 +119,7 @@ Fecha: ${new Date().toLocaleString('es-CL')}
           <h2 style="color: #333; border-bottom: 2px solid #007ACC; padding-bottom: 10px;">
             Nueva Solicitud de Cotización
           </h2>
-          
+
           <div style="margin: 20px 0;">
             <p style="margin: 10px 0;"><strong>Nombre:</strong> ${safeName}</p>
             <p style="margin: 10px 0;"><strong>Email:</strong> <a href="mailto:${safeEmail}" style="color: #007ACC;">${safeEmail}</a></p>
@@ -126,7 +131,7 @@ Fecha: ${new Date().toLocaleString('es-CL')}
             <p style="margin: 10px 0;"><strong>Presión de plazo:</strong> ${quoteData.timelinePressure || 'No evaluado'}</p>
             <p style="margin: 10px 0;"><strong>Adecuación presupuestaria:</strong> ${quoteData.budgetAdequacy || 'No evaluada'}</p>
           </div>
-          
+
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 14px;">
               Fecha: ${new Date().toLocaleString('es-CL')}

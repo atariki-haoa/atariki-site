@@ -4,6 +4,8 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { mcpAuthRouter, getOAuthProtectedResourceMetadataUrl } from '@modelcontextprotocol/sdk/server/auth/router.js';
 import { requireBearerAuth } from '@modelcontextprotocol/sdk/server/auth/middleware/bearerAuth.js';
 import postsRouter from './routes/posts.js';
+import contactRouter from './routes/contact.js';
+import quoteRouter from './routes/quote.js';
 import { verifyApiKey } from './middleware/verifyApiKey.js';
 import { createMcpServer } from './mcp/server.js';
 import { oauthProvider } from './oauth/provider.js';
@@ -14,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/posts', verifyApiKey, postsRouter);
+app.use('/contact', verifyApiKey, contactRouter);
+app.use('/quote', verifyApiKey, quoteRouter);
 
 const port = Number(process.env.BACKEND_PORT ?? 4000);
 const backendPublicUrl = new URL(process.env.BACKEND_PUBLIC_URL || `http://localhost:${port}`);
