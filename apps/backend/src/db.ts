@@ -23,6 +23,26 @@ function createDatabase(): DatabaseSync {
     )
   `);
 
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS oauth_clients (
+      client_id TEXT PRIMARY KEY,
+      data_json TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    )
+  `);
+
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS refresh_tokens (
+      token_hash TEXT PRIMARY KEY,
+      client_id TEXT NOT NULL,
+      scope TEXT NOT NULL,
+      resource TEXT,
+      created_at INTEGER NOT NULL,
+      expires_at INTEGER NOT NULL,
+      revoked_at INTEGER
+    )
+  `);
+
   return database;
 }
 

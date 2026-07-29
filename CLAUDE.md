@@ -88,8 +88,13 @@ Plain Express + TypeScript (ESM, `NodeNext` module resolution), no framework bey
 - `src/db.ts` — SQLite connection (`node:sqlite`, no native deps) and schema migration
 - `src/postsRepo.ts` — `list()`, `getBySlug()`, `create()` over the `posts` table
 - `src/routes/posts.ts` — `GET /posts`, `GET /posts/:slug`, behind `verifyApiKey()`
-- `src/mcp/` — the MCP server: `auth.ts` (`verifyMcpBearerToken`, a separate secret from
-  the internal API key) and `server.ts` (`McpServer` + the `publish_post` tool)
+- `src/mcp/server.ts` — `McpServer` + the `publish_post` tool
+- `src/oauth/` — a minimal, single-admin OAuth 2.1 Authorization Server for `/mcp`, built on
+  the MCP SDK's own `server/auth` module (`mcpAuthRouter`, `requireBearerAuth`): `provider.ts`
+  (`AtarikiOAuthProvider`, the `OAuthServerProvider` implementation — issues JWT access tokens
+  + opaque refresh tokens, gates `/authorize` behind an admin-password login form),
+  `clientsStore.ts` (SQLite-backed dynamic client registration), `tokens.ts` / `refreshTokenRepo.ts`
+  (JWT signing/verification, hashed refresh token storage), `loginPage.ts` (the login HTML)
 - `src/generateSlug.ts`, `src/extractTitle.ts` — pure helpers used by `publish_post`
   (the post's title is derived from the first `# heading` in `content_md`, since the tool
   doesn't take a separate `title` param)
@@ -105,7 +110,9 @@ Plain Express + TypeScript (ESM, `NodeNext` module resolution), no framework bey
 
 **Backend** (`apps/backend/.env`):
 - `BACKEND_API_KEY` — Same value as the frontend's copy; validated by `verifyApiKey()` on every `/posts` request.
-- `MCP_BEARER_TOKEN` — Separate secret for `/mcp` (used by MCP clients like Claude.ai, not by the frontend). Temporary until a full OAuth Authorization Server replaces it.
+- `ADMIN_PASSWORD` — Password required to approve an `/authorize` request (the only "user" of this Authorization Server is the site admin). Checked with a timing-safe comparison, same pattern as `BACKEND_API_KEY`.
+- `OAUTH_JWT_SECRET` — Symmetric secret used to sign/verify the JWT access tokens issued by `/token`.
+- `BACKEND_PUBLIC_URL` — Public HTTPS URL of the backend (e.g. `https://api.atariki.dev`), used as the OAuth issuer and resource server identifier for discovery metadata. Falls back to `http://localhost:<BACKEND_PORT>` when unset (fine for local testing, but real MCP clients like Claude.ai need a real public URL).
 - `BACKEND_PORT` — Optional, defaults to `4000`.
 - `FRONTEND_PUBLIC_URL` — Public frontend URL, used to build `mdDownloadUrl` in the `publish_post` response.
 - `BLOG_DB_PATH` — Optional, defaults to `./data/blog.db`. In Docker this should stay under `/app/data`, the mount point of the `blog-data` volume (owned by the `backend` service in `docker-compose.yml`).
