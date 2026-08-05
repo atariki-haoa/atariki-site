@@ -1,0 +1,37 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Sync repository
+        run: |
+          cd /home/atariki/atariki-site-staging
+          git fetch origin dev
+          git reset --hard origin/dev
+
+      - name: Build and deploy
+        run: |
+          cd /home/atariki/atariki-site-staging
+          docker compose -f docker-compose.staging.yml up -d --build
+
+      - name: Health check
+        run: |
+          for i in $(seq 1 10); do
+            if curl -sf http://localhost:15001 > /dev/null; then
+              echo "Staging site is up"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Health check failed"
+          docker compose -f /home/atariki/atariki-site-staging/docker-compose.staging.yml logs --tail=100
+          exit 1
