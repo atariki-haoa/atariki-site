@@ -6,7 +6,7 @@ FROM base AS build
 COPY . .
 RUN pnpm install --frozen-lockfile
 RUN pnpm --filter frontend build
-RUN pnpm --filter frontend --prod deploy /prod/frontend
+RUN pnpm --filter frontend --prod deploy --legacy /prod/frontend
 
 FROM base AS runner
 ENV NODE_ENV=production
