@@ -21,7 +21,7 @@ jobs:
       - name: Build and deploy
         run: |
           cd /home/atariki/atariki-site-staging
-          docker compose -f docker-compose.staging.yml up -d --build
+          docker compose -f docker-compose.staging.yml up -d --build --remove-orphans
 
       - name: Health check
         run: |
