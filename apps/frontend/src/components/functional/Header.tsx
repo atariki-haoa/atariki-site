@@ -7,6 +7,7 @@ import {
   FaProjectDiagram,
   FaEnvelope,
   FaCalculator,
+  FaBlog,
   FaBars,
   FaTimes,
 } from 'react-icons/fa';
@@ -27,6 +28,7 @@ const Header: React.FC = () => {
         home: 'Inicio',
         about: 'Sobre mí',
         projects: 'Proyectos',
+        blog: 'Blog',
         calculator: 'Cotizador',
         contact: 'Contacto',
         github: 'GitHub',
@@ -39,6 +41,7 @@ const Header: React.FC = () => {
         home: 'Home',
         about: 'About',
         projects: 'Projects',
+        blog: 'Blog',
         calculator: 'Quote',
         contact: 'Contact',
         github: 'GitHub',
@@ -52,6 +55,7 @@ const Header: React.FC = () => {
     { href: '/', label: labels.home, Icon: FaHome },
     { href: '/about', label: labels.about, Icon: FaUser },
     { href: '/projects', label: labels.projects, Icon: FaProjectDiagram },
+    { href: '/blog', label: labels.blog, Icon: FaBlog },
     { href: '/calculator', label: labels.calculator, Icon: FaCalculator },
     { href: '/contact', label: labels.contact, Icon: FaEnvelope },
   ];
