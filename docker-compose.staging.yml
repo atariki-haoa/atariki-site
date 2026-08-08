@@ -3,15 +3,15 @@ services:
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
-    image: atariki-site-frontend:latest
-    container_name: atariki-site-frontend
+    image: atariki-site-frontend:staging
+    container_name: atariki-site-staging-frontend
     restart: unless-stopped
     env_file:
       - .env
     environment:
       BACKEND_URL: http://backend:4000
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:15001:3000"
     depends_on:
       - backend
 
@@ -19,15 +19,15 @@ services:
     build:
       context: .
       dockerfile: apps/backend/Dockerfile
-    image: atariki-site-backend:latest
-    container_name: atariki-site-backend
+    image: atariki-site-backend:staging
+    container_name: atariki-site-staging-backend
     restart: unless-stopped
     env_file:
       - .env
     ports:
-      - "127.0.0.1:4000:4000"
+      - "127.0.0.1:15002:4000"
     volumes:
-      - blog-data:/app/data
+      - blog-data-staging:/app/data
 
 volumes:
-  blog-data:
+  blog-data-staging:

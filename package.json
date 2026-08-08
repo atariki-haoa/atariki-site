@@ -1,16 +1,8 @@
 {
   "name": "atariki-site",
   "version": "1.0.0",
+  "private": true,
   "description": "Portfolio profesional de Ariel Atariki Lobos Haoa - Desarrollador Full Stack especializado en React, Node.js, TypeScript y Python",
-  "main": "index.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "jest",
-    "export": "next export"
-  },
   "keywords": [
     "desarrollador",
     "full stack",
@@ -44,44 +36,13 @@
   "bugs": {
     "url": "https://github.com/atariki-haoa/atariki-site/issues"
   },
-  "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@types/node": "^22.7.4",
-    "@types/react": "^18.3.10",
-    "autoprefixer": "^10.4.20",
-    "axios": "^1.7.7",
-    "cookie-parser": "^1.4.6",
-    "csrf": "^3.1.0",
-    "dompurify": "^3.1.7",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.0",
-    "express-rate-limit": "^7.4.0",
-    "form-data": "^4.0.4",
-    "framer-motion": "^11.9.0",
-    "mailgun.js": "^10.4.0",
-    "marked": "^14.1.2",
-    "next": "14.2.35",
-    "nodemailer": "^6.9.15",
-    "postcss": "^8.4.47",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-icons": "^5.3.0",
-    "react-markdown": "^9.0.1",
-    "react-spinners": "^0.14.1",
-    "react-tooltip": "^4.5.1",
-    "tailwindcss": "^3.4.13",
-    "typescript": "^5.6.2"
+  "scripts": {
+    "dev": "concurrently -n frontend,backend -c blue,green \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
+    "build": "pnpm --filter backend build && pnpm --filter frontend build",
+    "seed:post": "pnpm --filter backend seed:post"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.7",
-    "@types/express": "^5.0.0",
-    "@types/jest": "^30.0.0",
-    "@types/nodemailer": "^6.4.16",
-    "@types/react-dom": "^18.3.7",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.35",
-    "jest": "^30.3.0",
-    "ts-jest": "^29.4.6"
+    "concurrently": "^10.0.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
