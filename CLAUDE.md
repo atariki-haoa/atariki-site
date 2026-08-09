@@ -23,6 +23,8 @@ There are no tests configured for the backend. The frontend has a handful of Jes
 
 - Base branch for all work is `dev`, not `master`. Branch off `dev`, and open PRs targeting `dev`.
 - Never target `master` directly — no branching from it, no PRs into it — unless the user explicitly asks for it in that conversation.
+- Never add `Co-Authored-By: Claude` (or any similar AI-attribution trailer) to commit messages. Commits must read as authored solely by the user's own account.
+- Never include a link to the Claude Code conversation/session in PR descriptions.
 
 ## Architecture
 

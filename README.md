@@ -1,28 +1,28 @@
-# Sitio Personal de Ariel Lobos Haoa
+# Ariel Lobos Haoa's Personal Site
 
-Este es el repositorio del sitio personal de Ariel Lobos Haoa, desarrollado con Next.js. El sitio muestra mis habilidades, proyectos y pasiones.
+This is the repository for Ariel Lobos Haoa's personal site, built with Next.js. The site showcases my skills, projects, and interests.
 
-## Enlace en Vivo
+## Live Link
 
-[Visita mi sitio personal](https://www.atariki.dev)
+[Visit my personal site](https://www.atariki.dev)
 
-## Tabla de Contenidos
+## Table of Contents
 
-- [Descripción](#descripción)
-- [Capturas de Pantalla](#capturas-de-pantalla)
-- [Tecnologías Utilizadas](#tecnologías-utilizadas)
-- [Instalación](#instalación)
-- [Uso](#uso)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Contribuciones](#contribuciones)
-- [Licencia](#licencia)
+- [Description](#description)
+- [Screenshots](#screenshots)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Descripción
+## Description
 
-Este proyecto es un sitio web personal para dar a conocer habilidades en desarrollo web, mis proyectos y mis intereses. Lo construi con Next.js porque es un framework bastante bueno, implementa varias buenas prácticas y tiene una estructura simple y potente.
+This project is a personal website to showcase my web development skills, projects, and interests. I built it with Next.js because it's a solid framework, implements several good practices, and has a simple yet powerful structure.
 
 
-## Tecnologías Utilizadas
+## Technologies Used
 
 - [Next.js](https://nextjs.org/)
 - [React](https://reactjs.org/)
@@ -34,44 +34,44 @@ Este proyecto es un sitio web personal para dar a conocer habilidades en desarro
 - [Form Data](https://github.com/form-data/form-data)
 - [Nodemailer](https://nodemailer.com/)
 
-## Instalación
+## Installation
 
-Para instalar y ejecutar este proyecto localmente, sigue estos pasos:
+To install and run this project locally, follow these steps:
 
-1. Clona el repositorio:
+1. Clone the repository:
     ```bash
     git clone https://github.com/atariki-haoa/atariki-site
     cd atariki-site
     ```
 
-2. Instala las dependencias:
+2. Install the dependencies:
     ```bash
     npm install
     ```
 
-3. Ejecuta el servidor de desarrollo:
+3. Run the development server:
     ```bash
     npm run dev
     ```
 
-4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el resultado.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-## Uso
+## Usage
 
-Puedes empezar a editar la página modificando `pages/index.tsx`. La página se actualizará automáticamente a medida que edites el archivo.
+You can start editing the page by modifying `pages/index.tsx`. The page will auto-update as you edit the file.
 
-## Estructura del Proyecto
+## Project Structure
 
-- `src/components/`: Componentes reutilizables de React.
-- `src/pages/`: Páginas del sitio web.
-- `src/public/`: Archivos estáticos como imágenes y fuentes.
-- `src/styles/`: Archivos de estilo globales y Tailwind CSS.
-- `src/data`: Archivos de datos que se utilizan en el sitio web. Incluye los íconos
-- `src/utils`: Funciones auxiliares que se utilizan en el sitio web.
-- `src/types`: Tipos de datos personalizados que se utilizan en el sitio web.
-- `tsconfig.json`: Configuración de TypeScript.
-- `next.config.js`: Configuración de Next.js.
+- `src/components/`: Reusable React components.
+- `src/pages/`: Website pages.
+- `src/public/`: Static files such as images and fonts.
+- `src/styles/`: Global stylesheets and Tailwind CSS.
+- `src/data`: Data files used across the website. Includes icons
+- `src/utils`: Helper functions used across the website.
+- `src/types`: Custom data types used across the website.
+- `tsconfig.json`: TypeScript configuration.
+- `next.config.js`: Next.js configuration.
 
 ---
 
-Desarrollado por Ariel Lobos Haoa.
+Built by Ariel Lobos Haoa.
